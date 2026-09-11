@@ -170,6 +170,16 @@ if (Test-Path -LiteralPath "Config\DefaultEditorPerProjectUserSettings.ini") {
     }
 }
 
+if (Test-Path -LiteralPath "Config\DefaultGameplayTags.ini") {
+    $gameplayTagsConfig = Get-Content -LiteralPath "Config\DefaultGameplayTags.ini" -Raw
+    foreach ($tagName in @("NewWorld.Asset.AIWork", "NewWorld.Asset.ProvenanceRequired", "NewWorld.MCP.Staging", "NewWorld.Validation.Required")) {
+        $tagPattern = "\+GameplayTagList=\(Tag=" + [char]34 + [regex]::Escape($tagName) + [char]34
+        if ($gameplayTagsConfig -notmatch $tagPattern) {
+            Add-Failure "DefaultGameplayTags.ini missing additive project tag: $tagName"
+        }
+    }
+}
+
 if (Test-Path -LiteralPath ".codex\config.toml") {
     $codexConfig = Get-Content -LiteralPath ".codex\config.toml" -Raw
     if ($codexConfig -notmatch "\[mcp_servers\.unreal-mcp\]") {
