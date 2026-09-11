@@ -54,6 +54,7 @@
 - Avoid Tick unless justified by behavior and budget.
 - UObject references must be GC-safe with UPROPERTY/TObjectPtr or other explicit ownership.
 - Editor-only code belongs in an Editor module or Editor Utility workflow.
+- Project asset policy validation belongs in the NewWorldEditor module and runs through UE Data Validation.
 
 ## AI Asset Rules
 
@@ -72,6 +73,7 @@
 - Compile after C++ header/reflection changes.
 - Run targeted Automation tests when available.
 - Run Data Validation before accepting asset-heavy changes.
+- Data Validation includes NewWorld asset policy checks for /Game/NewWorld naming, AIWork staging, manifest status, and MCP staging markers.
 - Run Tools/AI/check_ai_readiness.ps1 after changing AGENTS, .agents, .codex, project docs, or AI workflow scripts.
 - Run Tools/MCP/check_mcp_readiness.ps1 after changing MCP plugins, Config, .codex/config.toml, or Tools/MCP scripts.
 - Run Tools/AI/validate_ai_asset_manifest.py after changing Docs/Assets/AI_ASSET_MANIFEST.json.

@@ -27,6 +27,8 @@ Run Data Validation:
 G:/UnrealEngineInstalled/UE_5.8/Engine/Binaries/Win64/UnrealEditor-Cmd.exe G:/NewWorld/NewWorld.uproject -run=DataValidation -unattended -nop4 -nosplash
 ~~~
 
+Data Validation includes the NewWorldEditor asset policy validator for /Game/NewWorld naming, AIWork staging, AI_ASSET_MANIFEST status, and MCP staging markers.
+
 AI readiness check:
 
 ~~~powershell
@@ -46,6 +48,7 @@ python Tools/AI/validate_ai_asset_manifest.py Docs/Assets/AI_ASSET_MANIFEST.json
 3. Inspect logs when a command fails or exits with warnings that affect acceptance.
 4. Do not claim success from skipped checks.
 5. For asset-heavy changes, run Data Validation before acceptance.
+6. After changing Source/NewWorldEditor or validation policy, regenerate project files before building NewWorldEditor.
 
 ## Output
 

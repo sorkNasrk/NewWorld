@@ -41,6 +41,11 @@ $requiredPaths = @(
     ".codex\config.toml",
     "Config\DefaultEditorPerProjectUserSettings.ini",
     "Config\DefaultGameplayTags.ini",
+    "Source\NewWorldEditor.Target.cs",
+    "Source\NewWorldEditor\NewWorldEditor.Build.cs",
+    "Source\NewWorldEditor\Private\NewWorldEditorModule.cpp",
+    "Source\NewWorldEditor\Private\NewWorldAssetPolicyValidator.h",
+    "Source\NewWorldEditor\Private\NewWorldAssetPolicyValidator.cpp",
     "NewWorld.uproject"
 )
 
@@ -74,7 +79,19 @@ try {
 
 try {
     $uproject = Get-Content -LiteralPath "NewWorld.uproject" -Raw | ConvertFrom-Json
+    $moduleNames = @($uproject.Modules | ForEach-Object { $_.Name })
+    if ($moduleNames -notcontains "NewWorldEditor") {
+        Add-Failure "NewWorld.uproject missing NewWorldEditor module."
+    } else {
+        $editorModule = @($uproject.Modules | Where-Object { $_.Name -eq "NewWorldEditor" })[0]
+        if ($editorModule.Type -ne "Editor") {
+            Add-Failure "NewWorldEditor module must be Type=Editor."
+        }
+    }
     $enabledPlugins = @($uproject.Plugins | Where-Object { $_.Enabled } | ForEach-Object { $_.Name })
+    if ($enabledPlugins -notcontains "DataValidation") {
+        Add-Failure "DataValidation plugin must be enabled for project asset policy checks."
+    }
     $requiredMcpPlugins = @(
         "ModelContextProtocol",
         "MCPClientToolset",
@@ -99,6 +116,39 @@ try {
     }
 } catch {
     Add-Failure "NewWorld.uproject JSON parse failed: $($_.Exception.Message)"
+}
+
+if (Test-Path -LiteralPath "Source\NewWorldEditor.Target.cs") {
+    $editorTarget = Get-Content -LiteralPath "Source\NewWorldEditor.Target.cs" -Raw
+    if ($editorTarget -notmatch "NewWorldEditor") {
+        Add-Failure "NewWorldEditor.Target.cs must include the NewWorldEditor module."
+    }
+}
+
+if (Test-Path -LiteralPath "Source\NewWorldEditor\NewWorldEditor.Build.cs") {
+    $editorBuild = Get-Content -LiteralPath "Source\NewWorldEditor\NewWorldEditor.Build.cs" -Raw
+    foreach ($moduleDependency in @("UnrealEd", "DataValidation", "AssetRegistry", "Json")) {
+        $quotedDependency = [char]34 + $moduleDependency + [char]34
+        if ($editorBuild -notmatch [regex]::Escape($quotedDependency)) {
+            Add-Failure "NewWorldEditor.Build.cs missing dependency: $moduleDependency"
+        }
+    }
+}
+
+if (Test-Path -LiteralPath "Source\NewWorldEditor\Private\NewWorldAssetPolicyValidator.h") {
+    $validatorHeader = Get-Content -LiteralPath "Source\NewWorldEditor\Private\NewWorldAssetPolicyValidator.h" -Raw
+    if ($validatorHeader -notmatch "UEditorValidatorBase") {
+        Add-Failure "NewWorldAssetPolicyValidator must derive from UEditorValidatorBase."
+    }
+}
+
+if (Test-Path -LiteralPath "Source\NewWorldEditor\Private\NewWorldAssetPolicyValidator.cpp") {
+    $validatorSource = Get-Content -LiteralPath "Source\NewWorldEditor\Private\NewWorldAssetPolicyValidator.cpp" -Raw
+    foreach ($requiredRule in @("/Game/NewWorld", "/Game/NewWorld/AIWork", "AI_ASSET_MANIFEST.json", "qa_passed", "promoted")) {
+        if ($validatorSource -notmatch [regex]::Escape($requiredRule)) {
+            Add-Failure "NewWorldAssetPolicyValidator.cpp missing rule marker: $requiredRule"
+        }
+    }
 }
 
 if (Test-Path -LiteralPath "Config\DefaultEditorPerProjectUserSettings.ini") {

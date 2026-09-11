@@ -22,6 +22,8 @@ Audit content before it moves out of Content/NewWorld/AIWork or before accepting
 - LFS tracks binary/source art formats.
 - Redirectors and missing references are resolved before acceptance.
 - Import settings match type: mesh, skeletal mesh, texture, material, audio, UI, font, Niagara, cinematic, or localization.
+- UE Data Validation hard-checks /Game/NewWorld prefix shape, AIWork staging, AI_ASSET_MANIFEST readiness for promoted AI assets, and MCP staging markers through NewWorldEditor.
+- Manual QA still covers visual quality, topology, UVs, material setup, audio audition, UI focus, localization readability, and screenshots.
 
 ## Output
 

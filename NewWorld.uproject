@@ -13,9 +13,21 @@
 				"AIModule",
 				"UMG"
 			]
+		},
+		{
+			"Name": "NewWorldEditor",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
 		}
 	],
 	"Plugins": [
+		{
+			"Name": "DataValidation",
+			"Enabled": true,
+			"TargetAllowList": [
+				"Editor"
+			]
+		},
 		{
 			"Name": "ModelingToolsEditorMode",
 			"Enabled": true,

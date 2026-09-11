@@ -14,7 +14,7 @@ Source build or launcher build: local installed engine
 
 Primary game module: NewWorld
 Runtime modules: NewWorld
-Editor modules: TBD
+Editor modules: NewWorldEditor
 Template dependencies: Core, CoreUObject, Engine, InputCore, EnhancedInput, AIModule, StateTreeModule, GameplayStateTreeModule, UMG, Slate
 Template plugins: ModelingToolsEditorMode, StateTree, GameplayStateTree
 Selected MCP plugins enabled for Editor targets: ModelContextProtocol, MCPClientToolset, EditorToolset, GameplayTagsToolset, UMGToolSet, NiagaraToolsets, PCGToolset, AIModuleToolset, AutomationTestToolset, SlateInspectorToolset
@@ -27,6 +27,7 @@ Blueprint owns designer-facing composition and tuning.
 DataAssets/DataTables/Gameplay Tags own content configuration.
 AIWork is staging only.
 Formal assets need naming, import review, metadata, and validation.
+UE Data Validation enforces the first asset policy layer for /Game/NewWorld through NewWorldEditor.
 Project-level Codex skills remain in .codex/skills/project or .codex/skills/vendor.
 
 ## AI Workflow Artifacts
@@ -41,6 +42,7 @@ Project-level Codex skills remain in .codex/skills/project or .codex/skills/vend
 - MCP audit: Docs/Planning/MCP_OPERATION_AUDIT.md
 - MCP config: .codex/config.toml
 - MCP scripts: Tools/MCP/check_mcp_readiness.ps1, Tools/MCP/start_ue_mcp_editor.ps1, Tools/MCP/start_blender_mcp_session.ps1
+- UE asset policy validator: Source/NewWorldEditor/Private/NewWorldAssetPolicyValidator.cpp
 - Retrospectives: Docs/Planning/AI_PRODUCTION_RETROSPECTIVES.md
 - Readiness script: Tools/AI/check_ai_readiness.ps1
 - Manifest script: Tools/AI/validate_ai_asset_manifest.py
@@ -61,6 +63,8 @@ Data Validation:
 ~~~powershell
 G:/UnrealEngineInstalled/UE_5.8/Engine/Binaries/Win64/UnrealEditor-Cmd.exe G:/NewWorld/NewWorld.uproject -run=DataValidation -unattended -nop4 -nosplash
 ~~~
+
+Data Validation currently checks /Game/NewWorld assets for supported prefixes, [Prefix]_[Name]_[Descriptor]_[Variant] shape, AIWork staging, AI_ASSET_MANIFEST status, and MCP staging markers.
 
 AI readiness:
 ~~~powershell

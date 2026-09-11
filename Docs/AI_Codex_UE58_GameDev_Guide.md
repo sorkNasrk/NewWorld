@@ -401,6 +401,8 @@ G:\UnrealEngineInstalled\UE_5.8\Engine\Binaries\Win64\UnrealEditor-Cmd.exe <PROJ
 - Packaging smoke test。
 - 日志路径：Saved/Logs、Saved/Crashes、AutomationReports。
 
+当前 NewWorld 已将第一批资产规则落成 UE Data Validation：NewWorldEditor 模块中的 UNewWorldAssetPolicyValidator 只验证 /Game/NewWorld，检查正式资产前缀、[Prefix]_[Name]_[Descriptor]_[Variant] 形态、AIWork staging、AI_ASSET_MANIFEST.json 状态，以及 MCP staging 标记。ThirdPerson 模板资产暂不纳入项目规则，避免早期模板内容阻塞验证。
+
 Data Validation 应至少检查：
 
 - 命名前缀。
@@ -1651,6 +1653,6 @@ Do not execute tools or edit assets.
 - 扩展 UE MCP Toolsets 前先做单独评审，尤其是 AllToolsets、AIAssistant、GameFeatures、GAS、LiveCoding、PluginToolset。
 - 把项目通过验证的 Blender 工作流继续沉淀到 ue58-blender-mcp-asset skill。
 - 持续维护 MCP 操作审计模板，记录工具调用、修改资产、截图、日志、回滚方式和验收结论。
-- 为 Data Validation 增加自定义 C++/Blueprint/Python validators。
+- 扩展 Data Validation 自定义 validators，继续覆盖贴图压缩、材质实例、音频 routing、UI 字体和本地化规则。
 - 建立 scheduled task：每周内容审计、每周文档漂移检查、每个里程碑性能 trace。
 - 把 Blender、Substance、REAPER、AIART、AI Voice 的内部最佳实践蒸馏成项目 skills。

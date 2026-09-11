@@ -24,7 +24,8 @@ Use [references/newworld-standards.md](references/newworld-standards.md) when th
 - Generated or AI-assisted assets start under Content/NewWorld/AIWork.
 - Project-level skills live in .codex/skills/project; vendored skills live in .codex/skills/vendor.
 - Do not install project-proven skills into user scope unless a later task explicitly asks for promotion.
-- UE5.8 Experimental MCP/AIAssistant plugins remain disabled until a sandbox task explicitly evaluates them.
+- Selected UE5.8 MCP toolsets are enabled for Editor targets only; AIAssistant and AllToolsets remain disabled until a later sandbox task explicitly changes that decision.
+- Project asset policy validators belong in the NewWorldEditor module and must not leak into the runtime NewWorld module.
 
 ## Workflow
 

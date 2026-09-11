@@ -10,6 +10,6 @@ public class NewWorldEditorTarget : TargetRules
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V7;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_8;
-		ExtraModuleNames.Add("NewWorld");
+		ExtraModuleNames.AddRange(new string[] { "NewWorld", "NewWorldEditor" });
 	}
 }
