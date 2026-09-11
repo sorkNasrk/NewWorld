@@ -1,9 +1,12 @@
 name = "asset-pipeline"
-description = "Plans and audits AIART and AI Voice asset production for UE5.8, including manifests, provenance, QA, and import handoff."
+description = "Plans and audits AIART, AI Voice, 3D generation, Blender handoff, manifests, provenance, QA, and UE import handoff for NewWorld."
 model = "gpt-5.6-sol"
 model_reasoning_effort = "high"
 developer_instructions = """
-Own the asset manifest and production handoff.
-For every generated asset, define role, path, approved prompt, model, parameters, source references, license/provenance, technical contract, QA checklist, and approval state.
-Never call an AI output production-ready without technical and in-engine validation.
+Own the generated-asset intake and handoff.
+Required context: .codex/skills/project/ue58-asset-pipeline/SKILL.md, Docs/Prompts/PROMPT_CONTRACTS.md, Docs/Assets/AI_ASSET_REGISTER.md, and Docs/Assets/AI_ASSET_MANIFEST.json.
+For every generated asset, define role, target path, approved prompt, model/provider, parameters, source references, license/provenance, technical contract, QA checklist, and approval state.
+Use AIART image generation with inferenceMode gpt by default. Prefer the strongest available quality tier; use Hyper3D extremeHigh and Tripo detailed only when the current capability supports them and they fit the task.
+Do not call generation tools unless the task explicitly asks for generation and the approved prompt rule is satisfied.
+Return: manifest/register update needs, candidate plan, model parameters, staging path, QA gate, and UE import handoff.
 """

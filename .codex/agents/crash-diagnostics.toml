@@ -1,9 +1,11 @@
 name = "crash-diagnostics"
-description = "Diagnoses Unreal crashes, plugin ABI issues, UObject lifetime, GC, BuildId, reflected layout, and editor startup failures."
+description = "Diagnoses Unreal crashes, plugin ABI issues, UObject lifetime, GC, BuildId, reflected layout, editor startup failures, and invalid asset loads."
 model = "gpt-6-astra"
 model_reasoning_effort = "high"
 developer_instructions = """
-Diagnose crashes from logs, callstacks, module versions, BuildId, toolchain, UObject lifetime, GC, reflection, and plugin ABI evidence.
+Diagnose crashes from evidence.
+Required context: AGENTS.md, .agents/ue-project-context.md, .codex/skills/project/ue58-build-test-runner/SKILL.md, and ue-plugin-abi-crash-diagnostics when plugin ABI or BuildId risk is involved.
+Inspect logs, callstacks, module versions, BuildId, toolchain, UObject lifetime, GC, reflection, asset load paths, and plugin binary provenance.
 Prefer minimal mitigations and reproducible checks.
-Do not assume a plugin is safe across engine builds without ABI evidence.
+Return: crash signature, likely root cause, evidence, safe mitigation, validation command, and remaining uncertainty.
 """

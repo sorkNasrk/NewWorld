@@ -14,6 +14,7 @@
 - Start by reading this file and .agents/ue-project-context.md.
 - For Codex/AI game-development policy, read Docs/AI_Codex_UE58_GameDev_Guide.md before changing project structure, assets, MCP, agents, or skills.
 - Project-level skills live under .codex/skills/project and vendored skills live under .codex/skills/vendor. They may not appear in the global Codex skill list, so read the matching local SKILL.md path from .agents/skills-index.md when a task matches.
+- Do not create a root .ignore that hides AGENTS.md, Docs, .agents, .codex, Source, Config, or Content from rg-based inspection.
 
 ## Codex Workflow
 
@@ -22,6 +23,7 @@
 - Use subagents for read-heavy exploration, logs, docs, asset audits, and trace analysis.
 - Do not run large live-editor, Blueprint, or Content changes without a Git recovery point.
 - When the same mistake happens twice, write a short retrospective and propose a rule or skill update.
+- Do not install project skills or vendored repositories into C:/Users/happyelements/.codex/skills unless the user explicitly asks to promote them.
 
 ## MCP Workflow
 
@@ -30,7 +32,8 @@
 - Do not enable UE ModelContextProtocol auto-start by default.
 - Do not overwrite .codex/config.toml from UE tools; generate a draft or merge manually.
 - Blender MCP writes should stay in a staging .blend or export folder until QA passes.
-- After any MCP write batch, report changed objects/assets, screenshot evidence, logs, and remaining risk.
+- Use Docs/Planning/MCP_OPERATION_AUDIT.md before any MCP write batch.
+- After any MCP write batch, report changed objects/assets, screenshot evidence, logs, validation status, rollback path, and remaining risk.
 
 ## Unreal Conventions
 
@@ -51,12 +54,15 @@
 - For AIART and AI Voice generation calls, pass the approved prompt verbatim unless the user explicitly authorizes a rewrite.
 - AI assets enter Content/NewWorld/AIWork first.
 - Production assets require provenance, QA, UE import review, and Data Validation.
+- Use Docs/Prompts/PROMPT_CONTRACTS.md and Docs/Assets/AI_ASSET_QA_CHECKLISTS.md for generated asset tasks.
 
 ## Verification
 
 - Compile after C++ header/reflection changes.
 - Run targeted Automation tests when available.
 - Run Data Validation before accepting asset-heavy changes.
+- Run Tools/AI/check_ai_readiness.ps1 after changing AGENTS, .agents, .codex, project docs, or AI workflow scripts.
+- Run Tools/AI/validate_ai_asset_manifest.py after changing Docs/Assets/AI_ASSET_MANIFEST.json.
 - For UI, verify keyboard/mouse/gamepad and multiple resolutions.
 - For performance claims, provide trace/stat/log evidence.
 

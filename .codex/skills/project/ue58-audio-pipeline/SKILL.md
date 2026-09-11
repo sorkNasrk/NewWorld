@@ -1,17 +1,27 @@
 ---
 name: ue58-audio-pipeline
-description: Use for NewWorld SFX, VO, BGM, Ambient, AI Voice prompts, Sound Wave, Sound Cue, MetaSound, Sound Class, Submix, attenuation, and in-game audition.
+description: Use for NewWorld SFX, VO, BGM, ambient beds, UI sounds, cinematic audio, AI Voice prompts, music prompts, Sound Wave, Sound Cue, MetaSound, Sound Class, Submix, attenuation, and in-game audition.
 ---
 
 # UE5.8 Audio Pipeline
 
-Audio assets require gameplay context, not just mood words.
+Audio assets require gameplay context and mix intent, not just mood words. Read [references/audio-prompt-fields.md](references/audio-prompt-fields.md) for prompt and QA fields.
 
-For generated audio or music, record:
+## Required Inputs
 
 - Type: SFX, UI, VO, BGM, Ambient, or Cinematic.
-- Approved prompt and rule to pass it verbatim.
-- Trigger, duration, loop, 2D/3D, energy curve, BPM/rhythm/meter, timbre, space, variations, stems or dynamic layers.
-- VO exact text, speaker, emotion, speed, pauses, pronunciation, language, and subtitle key.
-- UE destination: Sound Wave, Sound Cue, MetaSound, Sound Class, Submix, attenuation, concurrency.
-- Loudness/peak check, loop click/pop check, variation fatigue check, and in-game audition.
+- Gameplay trigger, listener position, 2D/3D behavior, duration, loop policy, and variation count.
+- Emotional function, energy curve, BPM/rhythm/meter, instrumentation/timbre, attack/decay/tail, and spatial character.
+- UE target: Sound Wave, Sound Cue, MetaSound, Sound Class, Submix, attenuation, concurrency, or localization key.
+- Approved prompt and exact call parameters for generated audio/voice.
+
+## Defaults
+
+- Generated audio prompts are approved before tool calls and passed verbatim.
+- Create variations for repeated gameplay sounds.
+- Loops require seamless loop review and at least three playback cycles.
+- VO requires exact text, speaker, language, pronunciation notes, subtitle key, delivery, speed, pauses, and file naming.
+
+## Output
+
+Return source/provider, prompt, parameters, file names, UE asset path, routing, loudness/peak notes, loop/variation QA, in-game audition result, and provenance.

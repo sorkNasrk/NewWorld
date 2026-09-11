@@ -6,10 +6,12 @@ Saved/
 
 # IDE and local user state
 .vs/
+.vscode/
 .vscode/.browse.VC.db*
 .vscode/ipch/
 *.sln
 *.slnx
+*.code-workspace
 *.VC.db
 *.opensdf
 *.sdf

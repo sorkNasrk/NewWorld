@@ -1,17 +1,29 @@
 ---
 name: ue58-mcp-editor-automation
-description: Use for NewWorld UE MCP, Blender MCP, editor automation, tool discovery, recovery points, write scope, screenshots, logs, and Data Validation.
+description: Use for NewWorld UE MCP, Blender MCP, editor automation, tool discovery, operation audit, recovery points, write scope, screenshots, logs, and Data Validation planning.
 ---
 
 # UE5.8 MCP Editor Automation
 
-MCP tools can modify editor state and assets. Treat them as side-effectful automation.
+MCP tools can modify editor state, assets, Blueprint graphs, materials, scene objects, and config files. Treat them as side-effectful automation.
 
-Rules:
+Read [references/mcp-operation-review.md](references/mcp-operation-review.md) and use Docs/Planning/MCP_OPERATION_AUDIT.md before any MCP write batch.
 
-- Start with read-only discovery and describe/list calls.
-- Do not enable UE ModelContextProtocol auto-start by default.
-- Do not overwrite .codex/config.toml from UE tools; generate a draft or merge manually.
+## Defaults
+
+- Start with read-only discovery and scene/asset queries.
+- UE ModelContextProtocol stays disabled and manually evaluated in sandbox.
+- Do not let UE tools overwrite .codex/config.toml; generate a draft or merge manually.
 - Write only to explicitly scoped staging paths unless the task names a reviewed production target.
-- After each write batch, collect changed assets/objects, screenshot or PIE evidence, logs, and Data Validation plan.
-- Stop and inspect logs after incomplete tool returns instead of retrying blindly.
+- Blender MCP safe mode should be enabled when available.
+
+## Required Before Writes
+
+- Git recovery point or explicit confirmation that the current work can be discarded.
+- Exact tool/server, target path, operation list, and rollback plan.
+- Screenshot/log/Data Validation plan.
+- Manifest/provenance plan for generated assets.
+
+## Output
+
+Return changed objects/assets, screenshots needed or captured, log locations, validation status, rollback path, and residual risk.

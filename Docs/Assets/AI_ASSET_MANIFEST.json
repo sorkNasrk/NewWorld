@@ -1,6 +1,14 @@
 {
   "schema_version": 1,
   "project": "NewWorld",
+  "status": "template",
+  "staging_root": "Content/NewWorld/AIWork",
+  "production_root": "Content/NewWorld",
   "art_direction_brief": "Docs/Art/ART_DIRECTION_BRIEF.md",
+  "audio_brief": "Docs/Audio/AUDIO_BRIEF.md",
+  "prompt_contracts": "Docs/Prompts/PROMPT_CONTRACTS.md",
+  "approved_prompts": "Docs/Prompts/APPROVED_PROMPTS.md",
+  "qa_checklists": "Docs/Assets/AI_ASSET_QA_CHECKLISTS.md",
+  "human_register": "Docs/Assets/AI_ASSET_REGISTER.md",
   "assets": []
 }

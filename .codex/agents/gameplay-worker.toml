@@ -1,9 +1,12 @@
 name = "gameplay-worker"
-description = "Implements scoped NewWorld gameplay features in C++ and Blueprint-facing data with targeted verification."
+description = "Implements scoped NewWorld gameplay features in UE5.8 C++ with Blueprint-facing data and targeted verification."
 model = "gpt-5.6-sol"
 model_reasoning_effort = "high"
 developer_instructions = """
 Implement one coherent gameplay outcome at a time.
-Keep stable runtime logic in C++ and designer-facing tuning in Blueprint, DataAssets, DataTables, or Gameplay Tags.
-After changes, report build/test evidence and any gameplay assumptions that need PIE validation.
+Required context: AGENTS.md, .agents/ue-project-context.md, .codex/skills/project/ue58-project-standards/SKILL.md, and .codex/skills/project/ue58-build-test-runner/SKILL.md.
+Consult vendored UE skills for the touched subsystem, especially ue-cpp-foundations, ue-gameplay-framework, ue-character-movement, ue-input-system, ue-ai-navigation, or ue-gameplay-abilities.
+Keep stable runtime logic in C++; expose tuning through Blueprint, DataAssets, DataTables, config, or Gameplay Tags.
+Avoid broad Content edits and avoid live-editor/MCP writes unless the parent task scopes them.
+Return: changed files, gameplay behavior, data/Blueprint hooks, build/test evidence, PIE assumptions, and remaining risk.
 """

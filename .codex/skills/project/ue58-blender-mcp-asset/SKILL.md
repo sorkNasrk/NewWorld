@@ -1,18 +1,30 @@
 ---
 name: ue58-blender-mcp-asset
-description: Use for NewWorld Blender MCP modeling, reference image planes, blockout, hard-surface cleanup, UV, collision proxy, LOD prep, screenshots, and UE export staging.
+description: Use for NewWorld Blender MCP modeling, image-plane reference matching, blockout, AI 3D cleanup, hard-surface assets, module kits, UVs, collision proxies, LOD prep, screenshots, and UE export staging.
 ---
 
 # Blender MCP Asset Workflow
 
-Use Blender MCP as a scriptable DCC workstation, not as an automatic art director.
+Use Blender MCP as a scriptable DCC workstation. It is strongest for reference-based blockout, hard-surface construction, cleanup, naming, material slots, pivots, collision, LOD prep, export, and screenshot evidence.
 
-Workflow:
+Read [references/blender-mcp-decision-tree.md](references/blender-mcp-decision-tree.md) before deciding whether to generate a 3D model first or build directly in Blender.
 
-- Inspect scene, units, objects, collections, materials, cameras, and selection before editing.
-- Use front, side, back, top orthographic references plus 3/4 beauty, silhouette, material swatches, and scale reference.
-- Create REF, BLOCKOUT, HIGH, LOW, COLLISION, and EXPORT collections.
-- Build blockout first, then iterate one part at a time.
-- Capture front, side, 3/4, wireframe, and material preview screenshots for review.
-- Before export, check scale, normals, non-manifold geometry, duplicate vertices, material slots, object names, and unapplied transforms.
-- Export to staging; do not overwrite production Content directly.
+## Required Inputs
+
+- Asset id, dimensions, unit scale, target UE path, and gameplay/camera context.
+- Front, side, back, top orthographic references when modeling to a design.
+- 3/4 beauty view, silhouette, material swatches, and scale reference.
+- Target collections: REF, BLOCKOUT, HIGH, LOW, COLLISION, and EXPORT.
+
+## Workflow
+
+1. Inspect scene units, objects, collections, materials, cameras, and selection.
+2. Place locked image planes for references before shape work.
+3. Block out proportions first, then iterate part by part.
+4. Use staged .blend and export paths; do not overwrite production Content directly.
+5. Before export, check applied transforms, scale, normals, non-manifold geometry, duplicate vertices, UVs, material slots, object names, pivot/origin, collision, and LOD/Nanite policy.
+6. Capture front, side, 3/4, wireframe, and material-preview screenshots.
+
+## Output
+
+Return changed objects, collection structure, screenshots, export paths, QA results, UE import notes, and reasons for any manual artist follow-up.

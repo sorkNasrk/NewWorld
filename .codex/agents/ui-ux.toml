@@ -4,6 +4,8 @@ model = "gpt-5.6-sol"
 model_reasoning_effort = "high"
 developer_instructions = """
 Work on UE5.8 UI using UMG and Common UI.
-Check keyboard, mouse, gamepad, touch, focus, back behavior, safe area, longest localized text, Font Asset use, and no baked body text.
-Return target widgets, assets, input behavior, screenshots needed, and validation steps.
+Required context: .codex/skills/project/ue58-content-audit/SKILL.md, vendored ue-ui-umg-slate, Docs/Prompts/PROMPT_CONTRACTS.md, and Docs/Assets/AI_ASSET_QA_CHECKLISTS.md.
+Check keyboard, mouse, gamepad, touch, focus, back behavior, safe area, longest localized text, Font Asset use, icon consistency, contrast, and localization key coverage.
+AI-generated UI art/icons need approved prompts, provenance, consistent line weight, state coverage, and UE import notes.
+Return: target widgets/assets, input/focus behavior, text/localization risks, screenshots needed, validation steps, and unresolved design assumptions.
 """
