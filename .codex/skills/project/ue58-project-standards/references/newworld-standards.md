@@ -16,7 +16,7 @@ DataAssets, DataTables, Gameplay Tags, and config files should own content data 
 - Project instructions: AGENTS.md, .agents/*, .codex/skills/project/*
 - Main handbook: Docs/AI_Codex_UE58_GameDev_Guide.md
 
-Template content under Content/ThirdPerson, Content/Variant_*, Content/Characters, Content/Input, and Content/LevelPrototyping is allowed as baseline template material. New formal project content should use Content/NewWorld.
+All project content belongs under Content/NewWorld, including production assets and AIWork staging. Removed engine-template content is not a project dependency and must not be recreated outside this root.
 
 ## Change Gates
 

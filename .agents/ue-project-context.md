@@ -4,10 +4,10 @@ Engine version: Unreal Engine 5.8
 Engine install: G:/UnrealEngineInstalled/UE_5.8
 Project root: G:/NewWorld
 Project file: G:/NewWorld/NewWorld.uproject
-Template baseline: UE5.8 ThirdPerson C++
+Project baseline: UE5.8 C++ project; unused template content has been removed
 Baseline commit: 9d989d0 Initial UE5.8 Codex project setup
 Target platforms: Windows first, others TBD
-Renderer: UE5.8 default ThirdPerson template settings
+Renderer: UE5.8 project renderer settings
 Source build or launcher build: local installed engine
 
 ## Modules
@@ -15,8 +15,8 @@ Source build or launcher build: local installed engine
 Primary game module: NewWorld
 Runtime modules: NewWorld
 Editor modules: NewWorldEditor
-Template dependencies: Core, CoreUObject, Engine, InputCore, EnhancedInput, AIModule, StateTreeModule, GameplayStateTreeModule, UMG, Slate
-Template plugins: ModelingToolsEditorMode, StateTree, GameplayStateTree
+Runtime dependencies retained for future development: Core, CoreUObject, Engine, InputCore, EnhancedInput, AIModule, StateTreeModule, GameplayStateTreeModule, UMG, Slate
+Template-derived plugins retained for future development: ModelingToolsEditorMode, StateTree, GameplayStateTree
 Selected MCP plugins enabled for Editor targets: ModelContextProtocol, MCPClientToolset, EditorToolset, GameplayTagsToolset, UMGToolSet, NiagaraToolsets, PCGToolset, AIModuleToolset, AutomationTestToolset, SlateInspectorToolset
 Experimental AI plugin kept disabled: AIAssistant
 
@@ -27,6 +27,7 @@ Blueprint owns designer-facing composition and tuning.
 DataAssets/DataTables/Gameplay Tags own content configuration.
 AIWork is staging only.
 Formal assets need naming, import review, metadata, and validation.
+All project content lives under Content/NewWorld; UE template content and its external actor/object sidecars are not project dependencies.
 UE Data Validation enforces NewWorld asset policy for /Game/NewWorld through NewWorldEditor, including naming, AIWork staging, manifest route/status, MCP staging, and first-pass StaticMesh/Texture/Material checks.
 Project-level Codex skills remain in .codex/skills/project or .codex/skills/vendor.
 

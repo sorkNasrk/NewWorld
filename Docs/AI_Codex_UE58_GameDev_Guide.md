@@ -17,7 +17,7 @@
 5. UE live editor MCP 很有价值，但必须按阶段使用。Epic 官方 Claude 插件、UnrealClaude、VibeUE、soft-ue-cli 和社区 Unreal MCP 的共同经验是：让 AI 看到编辑器、运行 PIE、截图自检、用 Python 或工具集批量改 Blueprint/资产。对 NewWorld，UE MCP 只作为受控编辑器自动化入口，不作为可信构建系统。
 6. Blender MCP 不应被当成“自动美术师”。它更适合场景查询、程序化 blockout、硬表面、模块化资产、批量修复、材质槽、pivot、碰撞、LOD、导出和截图自检；复杂有机模型、角色、表情、权重、头发、布料仍要结合 AI 3D 生成、DCC 工具和人工审美。
 7. AI 资产不能从生成结果直接入库。必须走 brief、manifest、候选生成、确定 seed、成组生产、DCC 清理、UE 导入、场景内验证、Data Validation、来源记录的流程。
-8. NewWorld 已完成 UE5.8 ThirdPerson C++ 初始化、项目级 AGENTS/skills/agents、vendored skills、资产登记模板和 MCP 工程化接入；后续重点是用检查脚本和审计模板约束每一次 AI/MCP 写操作。
+8. NewWorld 已完成 UE5.8 C++ 项目初始化（无用模板内容已清理）、项目级 AGENTS/skills/agents、vendored skills、资产登记模板和 MCP 工程化接入；后续重点是用检查脚本和审计模板约束每一次 AI/MCP 写操作。
 
 ## 2. 调研依据与可信度
 
@@ -406,7 +406,7 @@ G:\UnrealEngineInstalled\UE_5.8\Engine\Binaries\Win64\UnrealEditor-Cmd.exe <PROJ
 - Packaging smoke test。
 - 日志路径：Saved/Logs、Saved/Crashes、AutomationReports。
 
-当前 NewWorld 已将资产规则落成 UE Data Validation：NewWorldEditor 模块中的 UNewWorldAssetPolicyValidator 只验证 /Game/NewWorld，检查正式资产前缀、[Prefix]_[Name]_[Descriptor]_[Variant] 形态、AIWork staging、AI_ASSET_MANIFEST.json 状态、creation_route 记录、MCP staging 标记，以及 StaticMesh/Texture/Material 的第一层质量问题。ThirdPerson 模板资产暂不纳入项目规则，避免早期模板内容阻塞验证。
+当前 NewWorld 已将资产规则落成 UE Data Validation：NewWorldEditor 模块中的 UNewWorldAssetPolicyValidator 只验证 /Game/NewWorld，检查正式资产前缀、[Prefix]_[Name]_[Descriptor]_[Variant] 形态、AIWork staging、AI_ASSET_MANIFEST.json 状态、creation_route 记录、MCP staging 标记，以及 StaticMesh/Texture/Material 的第一层质量问题。项目已移除无用模板资产；模板内容不属于验证或运行时兼容范围，所有新增内容必须放在 Content/NewWorld 下。
 
 Data Validation 应至少检查：
 
@@ -753,7 +753,7 @@ Top3D 角色管线可借鉴的关键步骤：
 11. AccuRig/Mixamo 可做快速 humanoid rig，但 marker placement、calibration、weight paint 不能省。
 12. Armpit、外套、裙摆、尾巴、头发、肩部是权重高风险区。
 13. 需要物理摆动的布料、尾巴、头发要加额外骨骼或 physics bones，再在 UE Physics Asset 中设置。
-14. UE 中使用第三人称模板动画或项目动画 retarget；检查 T-pose drift、脚底滑动、clipping、材质槽错位。
+14. UE 中使用经审核的原型动画或项目动画 retarget；检查 T-pose drift、脚底滑动、clipping、材质槽错位。
 
 ### 11.5 Skeletal Mesh 与 Animation 导入
 
@@ -767,7 +767,7 @@ UE 官方要点：
 
 动画规则：
 
-- locomotion 原型可用 UE 第三人称模板动画 retarget。
+- locomotion 原型可用经审核的临时动画或项目动画 retarget。
 - 高级 locomotion 可评估 Motion Matching，但需要 Pose Search 数据库和调试成本。
 - Anim Notify 用于脚步、攻击窗口、VFX/SFX 触发；Motion Matching 下要注意 Notify Filtering，避免短时间重复触发脚步声。
 - Control Rig 适合在 UE Editor/Sequencer 内做 rig 和动画修正。
