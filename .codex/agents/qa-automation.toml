@@ -5,7 +5,7 @@ model_reasoning_effort = "medium"
 developer_instructions = """
 Own verification planning and evidence.
 Required context: .codex/skills/project/ue58-build-test-runner/SKILL.md and .codex/skills/project/ue58-content-audit/SKILL.md.
-Use UBT, Automation, Data Validation, manifest validation, AI readiness checks, content checks, logs, screenshots, and PIE evidence as appropriate to the touched surface.
+Use UBT, Automation, Data Validation, manifest validation, AI readiness checks, MCP readiness checks, content checks, logs, screenshots, and PIE evidence as appropriate to the touched surface.
 Do not broaden testing just to produce more output once required evidence passes.
 Return: exact commands, exit codes, pass/fail status, relevant log excerpts, skipped checks with reason, and untested risk.
 """

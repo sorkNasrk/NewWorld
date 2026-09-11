@@ -1,4 +1,4 @@
-# UE5.8 3D 游戏项目的 Codex 技能、Agent 与项目规范调研 v3
+# UE5.8 3D 游戏项目的 Codex 技能、Agent 与项目规范调研 v4
 
 版本：2026-09-11  
 适用项目：G:\NewWorld，未来 UE5.8 3D 游戏项目  
@@ -13,11 +13,11 @@
 1. 先建立项目级规则，而不是一开始堆工具。根目录需要 AGENTS.md，另建 .agents/ue-project-context.md 保存 UE 版本、模块、插件、平台、C++/Blueprint 边界、验证命令和资产目录。
 2. 游戏开发 skill 优先安装两类：通用游戏开发技能库 gamedev-skills/awesome-gamedev-agent-skills，UE 专项 C++ 技能库 quodsoler/unreal-engine-skills。前者覆盖玩法、资产、音频、UI、关卡、发布；后者覆盖 UE C++、GAS、动画、渲染、音频、UMG、测试等更细的 API 规则。
 3. 高星通用 agent/rule/plugin 仓库只选择性借鉴，不建议全量安装。wshobson/agents、ChrisWiles/claude-code-showcase、cc-sdd、ai-ready、michaelshimeles/skills 的价值主要在工作流：项目记忆、技能触发、hook/CI、review agent、证据式验收、worktree 隔离和文档回写。
-4. UE5.8 本机安装已经包含实验性 AI/MCP 能力：ModelContextProtocol、AIAssistant、MCPClientToolset，以及 UMG、Niagara、PCG、AI Module 等 Toolset。它们不是默认生产依赖，应先在沙盒项目中验证可用性、安全边界和 Codex 配置。
-5. UE live editor MCP 很有价值，但应按阶段启用。Epic 官方 Claude 插件、UnrealClaude、VibeUE、soft-ue-cli 和社区 Unreal MCP 的共同经验是：让 AI 看到编辑器、运行 PIE、截图自检、用 Python 或工具集批量改 Blueprint/资产。对 Codex 项目应先把这种模式写成规范，再评估是否接入 UE MCP。
+4. UE5.8 本机安装已经包含实验性 AI/MCP 能力：ModelContextProtocol、AIAssistant、MCPClientToolset，以及 UMG、Niagara、PCG、AI Module 等 Toolset。本项目已选择性接入 MCP 相关 Editor Toolsets，但仍保持手动启动、tool search、staging 写入和审计优先。
+5. UE live editor MCP 很有价值，但必须按阶段使用。Epic 官方 Claude 插件、UnrealClaude、VibeUE、soft-ue-cli 和社区 Unreal MCP 的共同经验是：让 AI 看到编辑器、运行 PIE、截图自检、用 Python 或工具集批量改 Blueprint/资产。对 NewWorld，UE MCP 只作为受控编辑器自动化入口，不作为可信构建系统。
 6. Blender MCP 不应被当成“自动美术师”。它更适合场景查询、程序化 blockout、硬表面、模块化资产、批量修复、材质槽、pivot、碰撞、LOD、导出和截图自检；复杂有机模型、角色、表情、权重、头发、布料仍要结合 AI 3D 生成、DCC 工具和人工审美。
 7. AI 资产不能从生成结果直接入库。必须走 brief、manifest、候选生成、确定 seed、成组生产、DCC 清理、UE 导入、场景内验证、Data Validation、来源记录的流程。
-8. 当前项目尚未发现 .uproject 和 Git 仓库。新项目启动时应先初始化 Git 和大文件策略，再建立 UE 项目、AGENTS.md、.agents/skills、.codex/agents 和资产登记文档。
+8. NewWorld 已完成 UE5.8 ThirdPerson C++ 初始化、项目级 AGENTS/skills/agents、vendored skills、资产登记模板和 MCP 工程化接入；后续重点是用检查脚本和审计模板约束每一次 AI/MCP 写操作。
 
 ## 2. 调研依据与可信度
 
@@ -161,16 +161,16 @@ UE live editor MCP 的风险也很明确：它能直接修改 UObject、Blueprin
 
 | 能力 | 本机位置 | 关键事实 | 本项目采用建议 |
 | --- | --- | --- | --- |
-| Unreal MCP / ModelContextProtocol | Engine/Plugins/Experimental/ModelContextProtocol | FriendlyName 为 Unreal MCP；描述为 Anthropic MCP server implementation for Unreal Engine；Experimental、NoRedist、EnabledByDefault=false | 先作为 UE5.8 官方方向研究，不直接作为正式项目生产依赖 |
-| ModelContextProtocol settings | ModelContextProtocolSettings.h | 默认 ServerPortNumber=8000，ServerUrlPath=/mcp，bAutoStartServer=false，bEnableToolSearch=true | 保持按需启动；默认保留 tool search，避免一次性暴露大量工具 |
-| Client config generation | ModelContextProtocolClientConfig.h/.cpp | 支持 ClaudeCode、Cursor、VSCode、Gemini、Codex；Codex 目标为项目根 .codex/config.toml，TOML write-once，已有文件时不会安全合并 | 后续需要接入时先生成草稿或人工合并，不让工具覆盖 Codex 配置 |
-| Console command | ModelContextProtocolEngineModule.cpp | ModelContextProtocol.GenerateClientConfig <ClaudeCode|Cursor|VSCode|Gemini|Codex|All> | 只在沙盒项目中验证；执行前检查目标路径 |
+| Unreal MCP / ModelContextProtocol | Engine/Plugins/Experimental/ModelContextProtocol | FriendlyName 为 Unreal MCP；描述为 Anthropic MCP server implementation for Unreal Engine；Experimental、NoRedist、EnabledByDefault=false | NewWorld 已按 Editor target 启用；只监听 127.0.0.1:8000/mcp，手动启动 |
+| ModelContextProtocol settings | ModelContextProtocolSettings.h | 默认 ServerPortNumber=8000，ServerUrlPath=/mcp，bAutoStartServer=false，bEnableToolSearch=true | 项目默认固定为 8000、/mcp、bAutoStartServer=False、bEnableToolSearch=True |
+| Client config generation | ModelContextProtocolClientConfig.h/.cpp | 支持 ClaudeCode、Cursor、VSCode、Gemini、Codex；Codex 目标为项目根 .codex/config.toml，TOML write-once，已有文件时不会安全合并 | 本项目手写维护 .codex/config.toml；不让 UE 工具覆盖 |
+| Console command | ModelContextProtocolEngineModule.cpp | ModelContextProtocol.GenerateClientConfig <ClaudeCode|Cursor|VSCode|Gemini|Codex|All> | 仅作为参考；项目配置已存在时不要用它覆盖 Codex TOML |
 | ToolsetRegistry bridge | ModelContextProtocolEditor | bEnableToolSearch=true 时只注册 list_toolsets、describe_toolset、call_tool；真实工具按需发现和调用 | 推荐保留这种 discovery/dispatch 模式，减少上下文噪声 |
 | AIAssistant | Engine/Plugins/Experimental/AIAssistant | EditorOnly、Experimental、NoRedist、EnabledByDefault=false；依赖 PythonScriptPlugin、EditorScriptingUtilities、ToolsetRegistry、WebBrowser；默认 URL 为 https://dev.epicgames.com/community/assistant/embedded | 当作编辑器内 Ask AI/文档助手入口研究，不作为资产批处理主工具 |
-| UMGToolSet | Engine/Plugins/Experimental/Toolsets/UMGToolSet | 可 AICallable 创建 Widget Blueprint、添加/移动/删除/重命名 widget、查询 widget tree、绑定事件、替换模板、compile WBP | UI 原型期可在测试项目验证；正式 UI 仍需 CommonUI、字体、safe area 和最长文本检查 |
-| NiagaraToolsets | Engine/Plugins/Experimental/Toolsets/NiagaraToolsets | 可 AICallable 查询、编辑 Niagara system/schema/topology/data/status | VFX 原型可用，但必须截图/播放验证 bounds、overdraw、spawn rate 和 SFX 同步 |
-| PCGToolset | Engine/Plugins/Experimental/Toolsets/PCGToolset | 可 AICallable 创建 PCG graph、参数、实例、节点、连接、注释、执行 instant graph | 适合程序化关卡和场景批量生成；必须记录 seed、参数和玩家路径验证 |
-| MCPClientToolset | Engine/Plugins/Experimental/Toolsets/MCPClientToolset | 允许 ToolsetRegistry 客户连接本地或私有 MCP server | 后续可用于 UE 内部调用 Blender/资产库等本地 MCP，但先做安全审计 |
+| UMGToolSet | Engine/Plugins/Experimental/Toolsets/UMGToolSet | 可 AICallable 创建 Widget Blueprint、添加/移动/删除/重命名 widget、查询 widget tree、绑定事件、替换模板、compile WBP | 已作为精选 Toolset 启用；UI 写入必须在 AIWork/Dev 或明确目标内 |
+| NiagaraToolsets | Engine/Plugins/Experimental/Toolsets/NiagaraToolsets | 可 AICallable 查询、编辑 Niagara system/schema/topology/data/status | 已作为精选 Toolset 启用；必须截图/播放验证 bounds、overdraw、spawn rate 和 SFX 同步 |
+| PCGToolset | Engine/Plugins/Experimental/Toolsets/PCGToolset | 可 AICallable 创建 PCG graph、参数、实例、节点、连接、注释、执行 instant graph | 已作为精选 Toolset 启用；必须记录 seed、参数和玩家路径验证 |
+| MCPClientToolset | Engine/Plugins/Experimental/Toolsets/MCPClientToolset | 允许 ToolsetRegistry 客户连接本地或私有 MCP server | 已作为精选 Toolset 启用；连接本地/私有 MCP 前必须审计 |
 
 UE5.8 内置 MCP 的操作边界：
 
@@ -180,7 +180,7 @@ UE5.8 内置 MCP 的操作边界：
 4. 第四阶段入库：Data Validation、PIE 或截图、日志、来源记录通过后，从 AIWork/Staging 移入正式目录。
 5. 任何 MCP 写操作失败或返回不完整时，优先停下检查日志和当前编辑器状态，不连续重试。
 
-本项目后续接入 Codex + Unreal MCP 时，应让 Codex 在 AGENTS.md 中看到这些固定规则：
+NewWorld 当前接入 Codex + Unreal MCP 时，应让 Codex 在 AGENTS.md 中看到这些固定规则：
 
 ~~~text
 UE MCP is experimental. Treat it as editor automation, not a trusted build system.
@@ -190,6 +190,16 @@ Do not overwrite .codex/config.toml; generate or edit MCP config manually.
 Write only under Content/NewWorld/AIWork or Dev unless a task explicitly names a reviewed target.
 After every write batch, capture evidence: changed assets, screenshot or PIE result, log excerpt, Data Validation status.
 ~~~
+
+当前工程化状态：
+
+- 项目级 Codex MCP 配置：.codex/config.toml。
+- UE MCP server：unreal-mcp -> http://127.0.0.1:8000/mcp。
+- Blender MCP server：blender -> uvx + Python 3.12 + blender-mcp，BLENDER_MCP_SAFE_MODE=1。
+- UE MCP 启动脚本：Tools/MCP/start_ue_mcp_editor.ps1。
+- MCP 检查脚本：Tools/MCP/check_mcp_readiness.ps1。
+- Blender MCP 环境检查脚本：Tools/MCP/start_blender_mcp_session.ps1。
+- 禁止项：AllToolsets、AIAssistant、bAutoStartServer=True、0.0.0.0 绑定、用户级 Codex 配置自动修改。
 
 ## 5. 当前机器能力与推荐安装清单
 
@@ -244,25 +254,30 @@ npx skills add quodsoler/unreal-engine-skills
 | wshobson/agents | 只选 plugin-eval、agent authoring、review、docs/testing 类思路；不全量安装 |
 | alirezarezvani/claude-skills | 只评估 skill-security-auditor、agent-designer、self-improving-agent、prompt/version 工具类 |
 | Resource2Skill | 用于把 Blender、UE、REAPER、Substance、内部美术规范蒸馏成本项目 skill |
-| Epic Unreal Claude plugin | 暂不作为 Codex 安装项；等 UE 项目建立后评估 ModelContextProtocol 是否可通过 Codex MCP 接入 |
-| UnrealClaude / VibeUE / soft-ue-cli | 在沙盒 UE 项目中测试，不直接接入正式工程 |
-| ahujasid/blender-mcp | 作为后续 Codex + Blender MCP 候选；先测试 safe mode、截图、导入导出和 Python 执行边界 |
+| Epic Unreal Claude plugin | 暂不作为 Codex 安装项；借鉴其 ModelContextProtocol/Toolsets 方向 |
+| UnrealClaude / VibeUE / soft-ue-cli | 作为社区经验参考；NewWorld 当前使用 UE5.8 内置 ModelContextProtocol |
+| ahujasid/blender-mcp | NewWorld 已用项目级 Codex 配置接入本机 blender-mcp；继续借鉴 safe mode、截图、导入导出和 Python 执行边界 |
 | arjun988/blender-skills | 只借鉴 Blender 技能链、reference image match、export-pipeline，不复制到本地 |
 | tumourlove/monolith | 只借鉴 namespace dispatch、tool discovery、read-only hints 和安全说明；接入前需单独审计网络暴露和写操作 |
 
-Blender MCP 后续参考配置，不在本次执行：
+Blender MCP 当前项目级配置：
 
 ~~~powershell
-codex mcp add blender -- uvx blender-mcp
+# 不要为本项目运行 codex mcp add；该命令默认修改用户级 Codex 配置。
+# 项目配置源是 G:\NewWorld\.codex\config.toml。
+powershell -ExecutionPolicy Bypass -File Tools/MCP/start_blender_mcp_session.ps1
 ~~~
 
-手工配置等价形式：
+项目配置等价形式：
 
 ~~~toml
+[mcp_servers.unreal-mcp]
+url = "http://127.0.0.1:8000/mcp"
+
 [mcp_servers.blender]
-command = "uvx"
-args = ["blender-mcp"]
-env = { BLENDER_HOST = "localhost", BLENDER_PORT = "9876", BLENDER_MCP_SAFE_MODE = "1" }
+command = "C:\\Users\\happyelements\\.local\\bin\\uvx.exe"
+args = ["--python", "C:\\Users\\happyelements\\AppData\\Local\\Programs\\Python\\Python312\\python.exe", "blender-mcp"]
+env = { BLENDER_MCP_SAFE_MODE = "1", DISABLE_TELEMETRY = "1" }
 ~~~
 
 Blender MCP 使用提醒：
@@ -608,16 +623,17 @@ AI 图片生成的 prompt 应尽量详细，但详细信息必须在任务合同
 
 Blender MCP 适合当作“可脚本化 DCC 工作台”。Codex 应先查询场景和对象，再规划修改，最后截图和导出。不要让它在一个长 prompt 里同时完成生成、清理、UV、贴图、绑定、导出和 UE 导入。
 
-后续接入流程：
+当前项目接入流程：
 
-1. 打开 Blender，启用 MCP for Blender addon，只连接一个 MCP client。
-2. Codex 先调用场景查询能力，确认当前文件、单位、对象数量、collection、相机、材质和选中对象。
-3. 每个资产建立 collection：REF、BLOCKOUT、HIGH、LOW、COLLISION、EXPORT。
-4. 先用 image planes 和 primitives 做 blockout，截图确认轮廓。
-5. 再做细节、材质槽、UV、碰撞、LOD 或 Nanite 策略。
-6. 每轮修改后导出截图：front、side、3/4、wireframe、material preview。
-7. 导出前运行 Blender 侧检查：非流形面、重复点、法线方向、未命名对象、未应用 scale、空材质槽、过高面数。
-8. 导出到 staging，不直接覆盖正式 UE Content。
+1. 运行 Tools/MCP/start_blender_mcp_session.ps1，确认 uvx、Python、Blender 路径和 BLENDER_MCP_SAFE_MODE=1。
+2. 打开 Blender，启用 MCP for Blender addon，只连接一个 MCP client。
+3. Codex 先调用场景查询能力，确认当前文件、单位、对象数量、collection、相机、材质和选中对象。
+4. 每个资产建立 collection：REF、BLOCKOUT、HIGH、LOW、COLLISION、EXPORT。
+5. 先用 image planes 和 primitives 做 blockout，截图确认轮廓。
+6. 再做细节、材质槽、UV、碰撞、LOD 或 Nanite 策略。
+7. 每轮修改后导出截图：front、side、3/4、wireframe、material preview。
+8. 导出前运行 Blender 侧检查：非流形面、重复点、法线方向、未命名对象、未应用 scale、空材质槽、过高面数。
+9. 导出到 staging，不直接覆盖正式 UE Content。
 
 Blender MCP 任务提示应包含：
 
@@ -1390,7 +1406,8 @@ Primary game module: TBD
 Runtime modules: TBD
 Editor modules: TBD
 Plugins: EnhancedInput, CommonUI, Niagara, PCG, GameplayAbilities, MetaSounds, DataValidation as needed
-Experimental AI/MCP plugins to evaluate only in sandbox: ModelContextProtocol, AIAssistant, MCPClientToolset, UMGToolSet, NiagaraToolsets, PCGToolset, AIModuleToolset
+Selected MCP plugins enabled for Editor targets: ModelContextProtocol, MCPClientToolset, EditorToolset, GameplayTagsToolset, UMGToolSet, NiagaraToolsets, PCGToolset, AIModuleToolset, AutomationTestToolset, SlateInspectorToolset
+Experimental AI plugin kept disabled: AIAssistant
 
 ## Project rules
 
@@ -1412,8 +1429,8 @@ Formal assets need naming, import review, metadata, and validation.
 
 ## MCP policy
 
-UE MCP default assumption: experimental, disabled, manual start.
-Blender MCP default assumption: safe mode on when available, one client connected, staging only.
+UE MCP default assumption: experimental, Editor target only, manual start, 127.0.0.1:8000/mcp, tool search enabled.
+Blender MCP default assumption: safe mode on, one client connected, staging only.
 No MCP tool may batch-write production Content without manifest, recovery point, screenshot/log evidence, and Data Validation plan.
 ~~~
 
@@ -1607,15 +1624,16 @@ Do not execute tools or edit assets.
 6. 增加 ue58-mcp-editor-automation 和 ue58-blender-mcp-asset 两个专项 skills。
 7. 创建 .codex/agents 中的 ue-reviewer、technical-artist、asset-pipeline、blender-mcp-artist、mcp-safety-reviewer、qa-automation。
 8. 建立 Content/NewWorld/AIWork 和 Docs/Assets/AI_ASSET_REGISTER.md。
-9. 做第一个 playable vertical slice：灰盒玩法、最小 UI、临时 SFX、一个经过完整流程的 3D 资产。
-10. 在独立沙盒项目验证 UE5.8 ModelContextProtocol、AIAssistant 和 Blender MCP，不接入正式工程。
-11. 跑 Data Validation 和一次本地 review，把发现的问题回写到 AGENTS.md 或 skill。
+9. 建立项目级 .codex/config.toml，接入 unreal-mcp 和 blender MCP。
+10. 启用精选 UE5.8 MCP Toolsets，但保持手动启动、tool search、staging 写入和审计模板。
+11. 跑 MCP readiness、Data Validation 和一次本地 review，把发现的问题回写到 AGENTS.md 或 skill。
+12. 做第一个 playable vertical slice：灰盒玩法、最小 UI、临时 SFX、一个经过完整流程的 3D 资产。
 
 ## 22. 不建议一开始做的事
 
 - 不要全量安装大型通用 skills/agents 市场。
 - 不要在没有 Git 恢复点时让 live editor MCP 批量改 Content。
-- 不要把 UE5.8 Experimental MCP、AIAssistant 或第三方 Unreal MCP 当成默认生产依赖。
+- 不要启用 AllToolsets、AIAssistant 或第三方 Unreal MCP 作为默认生产依赖；当前精选 UE MCP 只能手动启动并按审计流程使用。
 - 不要让 Blender MCP 在没有正交参考图、尺寸和验收清单时制作复杂资产。
 - 不要连续修复明显失败的 AI 3D 模型；达到返工阈值后应重新生成或换路径。
 - 不要把 AI 生成模型直接放进正式目录。
@@ -1630,9 +1648,9 @@ Do not execute tools or edit assets.
 
 - 把本手册拆成 Docs/Art、Docs/Engineering、Docs/QA、Docs/Production 多文档，并用 AGENTS.md 指向。
 - 将 ue58 系列 skills 打包为个人或团队 plugin。
-- 接入 UE ModelContextProtocol 或经验证的 Unreal MCP 桥接工具。
-- 接入 Blender MCP，并把项目通过验证的 Blender 工作流沉淀为 ue58-blender-mcp-asset skill。
-- 建立 MCP 操作审计模板，记录工具调用、修改资产、截图、日志、回滚方式和验收结论。
+- 扩展 UE MCP Toolsets 前先做单独评审，尤其是 AllToolsets、AIAssistant、GameFeatures、GAS、LiveCoding、PluginToolset。
+- 把项目通过验证的 Blender 工作流继续沉淀到 ue58-blender-mcp-asset skill。
+- 持续维护 MCP 操作审计模板，记录工具调用、修改资产、截图、日志、回滚方式和验收结论。
 - 为 Data Validation 增加自定义 C++/Blueprint/Python validators。
 - 建立 scheduled task：每周内容审计、每周文档漂移检查、每个里程碑性能 trace。
 - 把 Blender、Substance、REAPER、AIART、AI Voice 的内部最佳实践蒸馏成项目 skills。

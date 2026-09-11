@@ -15,6 +15,8 @@ Read [references/blender-mcp-decision-tree.md](references/blender-mcp-decision-t
 - Front, side, back, top orthographic references when modeling to a design.
 - 3/4 beauty view, silhouette, material swatches, and scale reference.
 - Target collections: REF, BLOCKOUT, HIGH, LOW, COLLISION, and EXPORT.
+- Project MCP config: .codex/config.toml.
+- Runtime preflight: Tools/MCP/start_blender_mcp_session.ps1.
 
 ## Workflow
 
@@ -28,3 +30,9 @@ Read [references/blender-mcp-decision-tree.md](references/blender-mcp-decision-t
 ## Output
 
 Return changed objects, collection structure, screenshots, export paths, QA results, UE import notes, and reasons for any manual artist follow-up.
+
+## Verification
+
+- Run Tools/MCP/start_blender_mcp_session.ps1 before a Blender MCP task.
+- Confirm BLENDER_MCP_SAFE_MODE=1 in .codex/config.toml.
+- Capture front, side, 3/4, wireframe, and material-preview screenshots before UE import.

@@ -1,0 +1,14 @@
+# Project-level MCP configuration for NewWorld.
+# Do not add secrets here. Keep user-level MCP registrations out of this file.
+
+[mcp_servers.unreal-mcp]
+url = "http://127.0.0.1:8000/mcp"
+
+[mcp_servers.blender]
+command = "C:\\Users\\happyelements\\.local\\bin\\uvx.exe"
+args = [
+  "--python",
+  "C:\\Users\\happyelements\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+  "blender-mcp"
+]
+env = { BLENDER_MCP_SAFE_MODE = "1", DISABLE_TELEMETRY = "1" }

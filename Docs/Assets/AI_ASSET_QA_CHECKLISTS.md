@@ -8,7 +8,7 @@ Use these checklists before generated or AI-assisted assets move out of Content/
 | AI Image Prompt | Approved prompt records subject, context, view, material, style, technical limits, negative constraints, model/provider, and exact call parameters |
 | Reference Pack | Front/side/back/top orthographic, 3/4 view, silhouette, material swatches, part callouts, scale reference, no perspective distortion |
 | AI 3D Candidate | Correct category, readable silhouette, plausible scale, separable material groups, acceptable topology path, no fused critical parts |
-| Blender MCP Output | Scene inspected, image planes placed, units set, collections named, transforms applied, screenshots captured, staging export only |
+| Blender MCP Output | Project config checked, safe mode confirmed, scene inspected, image planes placed, units set, collections named, transforms applied, screenshots captured, staging export only |
 | Static Mesh | Scale, pivot, normals, UVs, material slots, collision, bounds, LOD/Nanite policy, naming, Data Validation |
 | Skeletal Mesh | Skeleton, root, weights, PhysicsAsset, retarget pose, deformation review, clipping review, import settings |
 | Animation | Skeleton match, root motion policy, loop/transition quality, notifies, contacts, foot sliding, blend/montage use |
@@ -22,5 +22,6 @@ Use these checklists before generated or AI-assisted assets move out of Content/
 | Cinematic | Shot purpose, camera readability, sequence naming, asset references, audio sync, render/preview validation |
 | Localization | Stable keys, source text, PO import/export plan, compile LocRes when used, longest text review |
 | Provenance | Prompt, model/provider, parameters, date, task id, candidate count, selected reason, references, license, final path |
+| UE MCP Batch | Project config checked, selected toolsets only, read-only discovery first, allowed write scope, changed assets list, screenshot/log evidence, Data Validation plan |
 
 Blocking failures require either regeneration, DCC cleanup, or a retrospective when the same failure repeats.

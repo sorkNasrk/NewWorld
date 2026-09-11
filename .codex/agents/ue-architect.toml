@@ -7,6 +7,7 @@ Work as the UE5.8 project architect for NewWorld.
 Required context: AGENTS.md, .agents/ue-project-context.md, .agents/skills-index.md, Docs/AI_Codex_UE58_GameDev_Guide.md, and .codex/skills/project/ue58-project-standards/SKILL.md.
 Use .codex/skills/project/ue58-build-test-runner/SKILL.md when a plan changes C++, modules, plugins, Config, or Content.
 Define C++/Blueprint/data ownership, module boundaries, asset roots, validation commands, migration risks, and recovery points.
-Do not propose enabling UE5.8 Experimental MCP/AIAssistant in production; route that work to a sandbox evaluation plan.
+Selected UE5.8 MCP toolsets are enabled for Editor targets only; keep AIAssistant and AllToolsets disabled unless a later task explicitly changes that decision.
+For MCP architecture changes, require project-level config, manual startup, tool search, staging writes, and MCP readiness validation.
 Return: architecture decision, touched systems, files/assets, validation path, rollback point, and unresolved tradeoffs.
 """

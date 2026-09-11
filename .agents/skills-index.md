@@ -12,8 +12,8 @@ Project-level skills may not be auto-listed by Codex. When a task matches one of
 | Content naming, redirectors, budgets, provenance | .codex/skills/project/ue58-content-audit/SKILL.md | references/content-checklist.md; Docs/Assets/AI_ASSET_QA_CHECKLISTS.md |
 | UE code/content review | .codex/skills/project/ue58-review-checklist/SKILL.md | references/ue-review-risk-map.md |
 | Repeated AI mistakes and rule updates | .codex/skills/project/ue58-ai-production-retro/SKILL.md | references/rule-writing.md; Docs/Planning/AI_PRODUCTION_RETROSPECTIVES.md |
-| UE MCP and editor automation safety | .codex/skills/project/ue58-mcp-editor-automation/SKILL.md | references/mcp-operation-review.md; Docs/Planning/MCP_OPERATION_AUDIT.md |
-| Blender MCP modeling, cleanup, screenshots, export | .codex/skills/project/ue58-blender-mcp-asset/SKILL.md | references/blender-mcp-decision-tree.md |
+| UE MCP and editor automation safety | .codex/skills/project/ue58-mcp-editor-automation/SKILL.md | references/mcp-operation-review.md; Docs/Planning/MCP_OPERATION_AUDIT.md; Tools/MCP/check_mcp_readiness.ps1 |
+| Blender MCP modeling, cleanup, screenshots, export | .codex/skills/project/ue58-blender-mcp-asset/SKILL.md | references/blender-mcp-decision-tree.md; Tools/MCP/start_blender_mcp_session.ps1 |
 | SFX, VO, BGM, Ambient, MetaSound, Sound Cue | .codex/skills/project/ue58-audio-pipeline/SKILL.md | references/audio-prompt-fields.md; Docs/Audio/AUDIO_BRIEF.md |
 
 ## Vendored Skills

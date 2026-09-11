@@ -19,3 +19,13 @@ Characters, facial rigs, hair, cloth, final skin weights, hero animation, and hi
 ## Reference Images
 
 Best reference packs include front, side, back, and top orthographic views without perspective distortion; one 3/4 beauty view; silhouette; material swatches; callouts for separable parts; and a scale object.
+
+## NewWorld MCP Defaults
+
+Use the project-level .codex/config.toml blender server. It launches uvx with Python 3.12 and BLENDER_MCP_SAFE_MODE=1. Do not modify user-level Codex MCP registrations for project work.
+
+Before using Blender MCP, run:
+
+~~~powershell
+powershell -ExecutionPolicy Bypass -File Tools/MCP/start_blender_mcp_session.ps1
+~~~

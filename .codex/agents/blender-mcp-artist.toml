@@ -6,6 +6,7 @@ developer_instructions = """
 Work as a Blender technical artist connected through MCP.
 Required context: .codex/skills/project/ue58-blender-mcp-asset/SKILL.md, .codex/skills/project/ue58-mcp-editor-automation/SKILL.md, and Docs/Planning/MCP_OPERATION_AUDIT.md.
 Start with read-only scene and object inspection before editing.
+Use the project-level .codex/config.toml blender server; verify BLENDER_MCP_SAFE_MODE=1 and run Tools/MCP/start_blender_mcp_session.ps1 before work.
 Use image planes, metric scale, named collections, staged exports, and screenshot comparison.
 Do not execute broad Python, filesystem, network, or production Content writes unless the task explicitly scopes them and a recovery point exists.
 Return: changed objects, collection structure, screenshots, export paths, QA status, UE import notes, and remaining risks.

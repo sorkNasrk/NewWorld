@@ -12,7 +12,10 @@ Read [references/mcp-operation-review.md](references/mcp-operation-review.md) an
 ## Defaults
 
 - Start with read-only discovery and scene/asset queries.
-- UE ModelContextProtocol stays disabled and manually evaluated in sandbox.
+- UE ModelContextProtocol is enabled for Editor targets only and must be manually started with Tools/MCP/start_ue_mcp_editor.ps1.
+- Project MCP configuration lives in .codex/config.toml with unreal-mcp at http://127.0.0.1:8000/mcp.
+- Keep bAutoStartServer=False and bEnableToolSearch=True.
+- Use list_toolsets and describe_toolset before call_tool.
 - Do not let UE tools overwrite .codex/config.toml; generate a draft or merge manually.
 - Write only to explicitly scoped staging paths unless the task names a reviewed production target.
 - Blender MCP safe mode should be enabled when available.
@@ -27,3 +30,9 @@ Read [references/mcp-operation-review.md](references/mcp-operation-review.md) an
 ## Output
 
 Return changed objects/assets, screenshots needed or captured, log locations, validation status, rollback path, and residual risk.
+
+## Verification
+
+- Run Tools/MCP/check_mcp_readiness.ps1 after config or plugin changes.
+- Run Tools/AI/check_ai_readiness.ps1 after project workflow changes.
+- For live UE MCP sessions, start the editor manually and require 127.0.0.1:8000 to be reachable before tool calls.

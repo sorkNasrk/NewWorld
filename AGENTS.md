@@ -25,13 +25,24 @@
 - When the same mistake happens twice, write a short retrospective and propose a rule or skill update.
 - Do not install project skills or vendored repositories into C:/Users/happyelements/.codex/skills unless the user explicitly asks to promote them.
 
+## Git Commit Rules
+
+- Use a concise imperative subject plus a body for non-trivial changes.
+- The body should explain what changed, why it changed, and which validation commands passed.
+- Mention intentional limits, skipped checks, and known follow-up work when relevant.
+- Avoid one-line commits for UE plugin, MCP, asset workflow, build, or project-rule changes.
+- For detailed project commits, append a short Chinese translation or summary at the end for Chinese readers.
+
 ## MCP Workflow
 
 - Treat UE MCP, Blender MCP, and editor toolsets as automation with side effects.
+- Project MCP config lives in .codex/config.toml. Do not use codex mcp add for this project unless the user explicitly asks to modify user-level Codex config.
+- Selected UE5.8 MCP plugins are enabled for Editor targets only: ModelContextProtocol, MCPClientToolset, EditorToolset, GameplayTagsToolset, UMGToolSet, NiagaraToolsets, PCGToolset, AIModuleToolset, AutomationTestToolset, and SlateInspectorToolset.
 - Start with read-only discovery and scene/asset queries.
-- Do not enable UE ModelContextProtocol auto-start by default.
+- Do not enable UE ModelContextProtocol auto-start by default; start it with Tools/MCP/start_ue_mcp_editor.ps1 when needed.
 - Do not overwrite .codex/config.toml from UE tools; generate a draft or merge manually.
 - Blender MCP writes should stay in a staging .blend or export folder until QA passes.
+- Keep Blender MCP safe mode enabled with BLENDER_MCP_SAFE_MODE=1.
 - Use Docs/Planning/MCP_OPERATION_AUDIT.md before any MCP write batch.
 - After any MCP write batch, report changed objects/assets, screenshot evidence, logs, validation status, rollback path, and remaining risk.
 
@@ -62,6 +73,7 @@
 - Run targeted Automation tests when available.
 - Run Data Validation before accepting asset-heavy changes.
 - Run Tools/AI/check_ai_readiness.ps1 after changing AGENTS, .agents, .codex, project docs, or AI workflow scripts.
+- Run Tools/MCP/check_mcp_readiness.ps1 after changing MCP plugins, Config, .codex/config.toml, or Tools/MCP scripts.
 - Run Tools/AI/validate_ai_asset_manifest.py after changing Docs/Assets/AI_ASSET_MANIFEST.json.
 - For UI, verify keyboard/mouse/gamepad and multiple resolutions.
 - For performance claims, provide trace/stat/log evidence.

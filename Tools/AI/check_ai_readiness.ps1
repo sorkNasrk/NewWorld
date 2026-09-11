@@ -35,6 +35,12 @@ $requiredPaths = @(
     "Docs\Planning\MCP_OPERATION_AUDIT.md",
     "Docs\Planning\AI_PRODUCTION_RETROSPECTIVES.md",
     "Tools\AI\validate_ai_asset_manifest.py",
+    "Tools\MCP\check_mcp_readiness.ps1",
+    "Tools\MCP\start_ue_mcp_editor.ps1",
+    "Tools\MCP\start_blender_mcp_session.ps1",
+    ".codex\config.toml",
+    "Config\DefaultEditorPerProjectUserSettings.ini",
+    "Config\DefaultGameplayTags.ini",
     "NewWorld.uproject"
 )
 
@@ -68,13 +74,69 @@ try {
 
 try {
     $uproject = Get-Content -LiteralPath "NewWorld.uproject" -Raw | ConvertFrom-Json
-    $experimentalPlugins = @("ModelContextProtocol", "AIAssistant", "MCPClientToolset", "UMGToolSet", "NiagaraToolsets", "PCGToolset", "AIModuleToolset")
-    $enabledExperimental = @($uproject.Plugins | Where-Object { $experimentalPlugins -contains $_.Name -and $_.Enabled })
-    if ($enabledExperimental.Count -gt 0) {
-        Add-Failure "Experimental AI/MCP plugins enabled: $($enabledExperimental.Name -join ', ')"
+    $enabledPlugins = @($uproject.Plugins | Where-Object { $_.Enabled } | ForEach-Object { $_.Name })
+    $requiredMcpPlugins = @(
+        "ModelContextProtocol",
+        "MCPClientToolset",
+        "EditorToolset",
+        "GameplayTagsToolset",
+        "UMGToolSet",
+        "NiagaraToolsets",
+        "PCGToolset",
+        "AIModuleToolset",
+        "AutomationTestToolset",
+        "SlateInspectorToolset"
+    )
+    foreach ($plugin in $requiredMcpPlugins) {
+        if ($enabledPlugins -notcontains $plugin) {
+            Add-Failure "Required selected MCP plugin not enabled: $plugin"
+        }
+    }
+    foreach ($plugin in @("AllToolsets", "AIAssistant")) {
+        if ($enabledPlugins -contains $plugin) {
+            Add-Failure "Forbidden experimental plugin enabled for this phase: $plugin"
+        }
     }
 } catch {
     Add-Failure "NewWorld.uproject JSON parse failed: $($_.Exception.Message)"
+}
+
+if (Test-Path -LiteralPath "Config\DefaultEditorPerProjectUserSettings.ini") {
+    $editorSettings = Get-Content -LiteralPath "Config\DefaultEditorPerProjectUserSettings.ini" -Raw
+    if ($editorSettings -notmatch "\[/Script/ModelContextProtocolEngine\.ModelContextProtocolSettings\]") {
+        Add-Failure "Missing ModelContextProtocol settings section."
+    }
+    if ($editorSettings -notmatch "ServerUrlPath=/mcp") {
+        Add-Failure "MCP ServerUrlPath must be /mcp."
+    }
+    if ($editorSettings -notmatch "ServerPortNumber=8000") {
+        Add-Failure "MCP ServerPortNumber must be 8000."
+    }
+    if ($editorSettings -match "bAutoStartServer\s*=\s*True") {
+        Add-Failure "MCP bAutoStartServer must remain False."
+    }
+    if ($editorSettings -notmatch "bEnableToolSearch=True") {
+        Add-Failure "MCP bEnableToolSearch must be True."
+    }
+}
+
+if (Test-Path -LiteralPath ".codex\config.toml") {
+    $codexConfig = Get-Content -LiteralPath ".codex\config.toml" -Raw
+    if ($codexConfig -notmatch "\[mcp_servers\.unreal-mcp\]") {
+        Add-Failure "Project Codex config missing unreal-mcp server."
+    }
+    if ($codexConfig -notmatch 'url\s*=\s*"http://127\.0\.0\.1:8000/mcp"') {
+        Add-Failure "unreal-mcp URL must be http://127.0.0.1:8000/mcp."
+    }
+    if ($codexConfig -notmatch "\[mcp_servers\.blender\]") {
+        Add-Failure "Project Codex config missing blender server."
+    }
+    if ($codexConfig -notmatch 'BLENDER_MCP_SAFE_MODE\s*=\s*"1"') {
+        Add-Failure "Blender MCP safe mode must be enabled."
+    }
+    if ($codexConfig -match "0\.0\.0\.0") {
+        Add-Failure "MCP config must not bind to 0.0.0.0."
+    }
 }
 
 $projectSkillCount = @(Get-ChildItem -Path ".codex\skills\project" -Directory -ErrorAction SilentlyContinue | Where-Object { Test-Path -LiteralPath (Join-Path $_.FullName "SKILL.md") }).Count
@@ -107,6 +169,9 @@ Write-Host "projectSkillCount=$projectSkillCount"
 Write-Host "agentCount=$agentCount"
 Write-Host "gamedevVendorSkillCount=$gamedevCount"
 Write-Host "quodsolerVendorSkillCount=$quodCount"
+
+& powershell -ExecutionPolicy Bypass -File "Tools\MCP\check_mcp_readiness.ps1"
+if ($LASTEXITCODE -ne 0) { Add-Failure "MCP readiness check failed." }
 
 if ($failures.Count -gt 0) {
     Write-Host "AI readiness check failed:"

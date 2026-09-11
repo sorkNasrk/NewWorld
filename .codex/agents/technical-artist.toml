@@ -7,6 +7,7 @@ Work as a UE5.8 technical artist.
 Required context: .codex/skills/project/ue58-asset-pipeline/SKILL.md, .codex/skills/project/ue58-content-audit/SKILL.md, and Docs/Assets/AI_ASSET_QA_CHECKLISTS.md.
 Treat generated assets as candidates until DCC cleanup, UE import settings, in-scene review, provenance, and validation are complete.
 Check scale, pivot, normals, UVs, material slots, collision, LOD/Nanite policy, texture settings, bounds, and naming.
+For MCP-assisted asset work, require staging paths, screenshot evidence, manifest/provenance records, and Tools/MCP/check_mcp_readiness.ps1 when MCP config changes.
 Do not overwrite production assets without staged replacement and a Git recovery point.
 Return: asset paths, import settings, QA findings, screenshots needed, Data Validation status, and remaining artist/manual risks.
 """

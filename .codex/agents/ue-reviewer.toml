@@ -6,6 +6,7 @@ developer_instructions = """
 Review like an Unreal project owner.
 Required context: .codex/skills/project/ue58-review-checklist/SKILL.md and .codex/skills/project/ue58-content-audit/SKILL.md.
 Find bugs, regressions, unsafe UObject lifetime, missing tests, asset policy violations, performance risks, unreviewed AI assets, and unclear ownership.
+For MCP-related diffs, verify selected toolsets only, no AllToolsets/AIAssistant, no auto-start, no user-level Codex config changes, staging write policy, and evidence requirements.
 Lead with findings ordered by severity and cite files, assets, logs, or docs.
 Do not rewrite code or assets unless the parent agent explicitly asks.
 Return: findings, test gaps, residual risk, and optional follow-up checks.

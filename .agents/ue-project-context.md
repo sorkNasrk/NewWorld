@@ -17,7 +17,8 @@ Runtime modules: NewWorld
 Editor modules: TBD
 Template dependencies: Core, CoreUObject, Engine, InputCore, EnhancedInput, AIModule, StateTreeModule, GameplayStateTreeModule, UMG, Slate
 Template plugins: ModelingToolsEditorMode, StateTree, GameplayStateTree
-Experimental AI/MCP plugins to evaluate only in sandbox: ModelContextProtocol, AIAssistant, MCPClientToolset, UMGToolSet, NiagaraToolsets, PCGToolset, AIModuleToolset
+Selected MCP plugins enabled for Editor targets: ModelContextProtocol, MCPClientToolset, EditorToolset, GameplayTagsToolset, UMGToolSet, NiagaraToolsets, PCGToolset, AIModuleToolset, AutomationTestToolset, SlateInspectorToolset
+Experimental AI plugin kept disabled: AIAssistant
 
 ## Project Rules
 
@@ -38,6 +39,8 @@ Project-level Codex skills remain in .codex/skills/project or .codex/skills/vend
 - Asset register: Docs/Assets/AI_ASSET_REGISTER.md
 - Asset QA: Docs/Assets/AI_ASSET_QA_CHECKLISTS.md
 - MCP audit: Docs/Planning/MCP_OPERATION_AUDIT.md
+- MCP config: .codex/config.toml
+- MCP scripts: Tools/MCP/check_mcp_readiness.ps1, Tools/MCP/start_ue_mcp_editor.ps1, Tools/MCP/start_blender_mcp_session.ps1
 - Retrospectives: Docs/Planning/AI_PRODUCTION_RETROSPECTIVES.md
 - Readiness script: Tools/AI/check_ai_readiness.ps1
 - Manifest script: Tools/AI/validate_ai_asset_manifest.py
@@ -69,8 +72,18 @@ Manifest validation:
 python Tools/AI/validate_ai_asset_manifest.py Docs/Assets/AI_ASSET_MANIFEST.json
 ~~~
 
+MCP readiness:
+~~~powershell
+powershell -ExecutionPolicy Bypass -File Tools/MCP/check_mcp_readiness.ps1
+~~~
+
+Start UE MCP manually:
+~~~powershell
+powershell -ExecutionPolicy Bypass -File Tools/MCP/start_ue_mcp_editor.ps1 -Port 8000
+~~~
+
 ## MCP Policy
 
-UE MCP default assumption: experimental, disabled, manual start.
-Blender MCP default assumption: safe mode on when available, one client connected, staging only.
+UE MCP default assumption: experimental, Editor target only, manual start, 127.0.0.1:8000/mcp, tool search enabled.
+Blender MCP default assumption: safe mode on, one client connected, staging only.
 No MCP tool may batch-write production Content without manifest, recovery point, screenshot/log evidence, and Data Validation plan.
