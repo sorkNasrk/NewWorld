@@ -34,10 +34,12 @@ $requiredPaths = @(
     "Docs\Art\ART_DIRECTION_BRIEF.md",
     "Docs\Planning\MCP_OPERATION_AUDIT.md",
     "Docs\Planning\AI_PRODUCTION_RETROSPECTIVES.md",
+    "Tools\Assets\export_blender_static_mesh_fbx.ps1",
     "Tools\AI\validate_ai_asset_manifest.py",
     "Tools\MCP\check_mcp_readiness.ps1",
     "Tools\MCP\start_ue_mcp_editor.ps1",
     "Tools\MCP\start_blender_mcp_session.ps1",
+    "Tools\MCP\import_static_mesh_via_ue_mcp.ps1",
     ".codex\config.toml",
     "Config\DefaultEditorPerProjectUserSettings.ini",
     "Config\DefaultGameplayTags.ini",
@@ -196,6 +198,24 @@ if (Test-Path -LiteralPath ".codex\config.toml") {
     }
     if ($codexConfig -match "0\.0\.0\.0") {
         Add-Failure "MCP config must not bind to 0.0.0.0."
+    }
+}
+
+if (Test-Path -LiteralPath "Tools\Assets\export_blender_static_mesh_fbx.ps1") {
+    $blenderExportScript = Get-Content -LiteralPath "Tools\Assets\export_blender_static_mesh_fbx.ps1" -Raw
+    foreach ($requiredMarker in @("Content\NewWorld\AIWork", "global_scale=100.0", "object_types={""MESH""}", "NEWWORLD_FBX_EXPORT_SUMMARY")) {
+        if ($blenderExportScript -notmatch [regex]::Escape($requiredMarker)) {
+            Add-Failure "export_blender_static_mesh_fbx.ps1 missing marker: $requiredMarker"
+        }
+    }
+}
+
+if (Test-Path -LiteralPath "Tools\MCP\import_static_mesh_via_ue_mcp.ps1") {
+    $ueMcpImportScript = Get-Content -LiteralPath "Tools\MCP\import_static_mesh_via_ue_mcp.ps1" -Raw
+    foreach ($requiredMarker in @("/Game/NewWorld/AIWork", "StaticMeshTools.import_file", ".glb", "call_tool", "refPath", "NewWorld.SourceFile")) {
+        if ($ueMcpImportScript -notmatch [regex]::Escape($requiredMarker)) {
+            Add-Failure "import_static_mesh_via_ue_mcp.ps1 missing marker: $requiredMarker"
+        }
     }
 }
 

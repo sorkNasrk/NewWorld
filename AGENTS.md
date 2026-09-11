@@ -43,6 +43,9 @@
 - Do not overwrite .codex/config.toml from UE tools; generate a draft or merge manually.
 - Blender MCP writes should stay in a staging .blend or export folder until QA passes.
 - Keep Blender MCP safe mode enabled with BLENDER_MCP_SAFE_MODE=1.
+- Use Tools/Assets/export_blender_static_mesh_fbx.ps1 for deterministic Blender .blend -> FBX exports; it defaults to Content/NewWorld/AIWork and scales Blender meter units to UE centimeters.
+- UE MCP StaticMeshTools.import_file is currently verified for .fbx/.obj through FbxFactory; convert .glb/.gltf to FBX/OBJ before this import path.
+- Use Tools/MCP/import_static_mesh_via_ue_mcp.ps1 for staging StaticMesh imports through UE MCP; it uses tools/list, describe_toolset, call_tool, full UObject refPath values, standard NewWorld metadata, save_assets, readback, and optional thumbnail evidence.
 - Use Docs/Planning/MCP_OPERATION_AUDIT.md before any MCP write batch.
 - After any MCP write batch, report changed objects/assets, screenshot evidence, logs, validation status, rollback path, and remaining risk.
 

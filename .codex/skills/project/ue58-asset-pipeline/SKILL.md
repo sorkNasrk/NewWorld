@@ -25,6 +25,7 @@ Read [references/asset-flow.md](references/asset-flow.md) for multi-step asset w
 - Tripo texture uses textureQuality: "detailed" when available and suitable.
 - Pass approved prompts verbatim in generation calls unless the user explicitly authorizes a rewrite.
 - Stage generated assets under Content/NewWorld/AIWork before promotion.
+- Treat GLB/GLTF as AI 3D or Blender interchange for static meshes. Use Tools/Assets/export_blender_static_mesh_fbx.ps1 to produce staged FBX before the verified UE MCP StaticMesh import path.
 
 ## Return Thresholds
 
@@ -34,4 +35,4 @@ Read [references/asset-flow.md](references/asset-flow.md) for multi-step asset w
 
 ## Output
 
-Return generated candidates, selected reason, prompt/model/parameter record, staging path, QA result, UE import settings, Data Validation status, and remaining risks.
+Return generated candidates, selected reason, prompt/model/parameter record, staging path, Blender cleanup/export result, UE import settings, Data Validation status, and remaining risks.

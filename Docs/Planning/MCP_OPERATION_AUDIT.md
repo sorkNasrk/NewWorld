@@ -53,6 +53,36 @@ Use this template before and after UE MCP, Blender MCP, editor scripting, or any
 
 ## Operation Records
 
+### 2026-09-11 UE MCP StaticMesh Import Script Dry Run
+
+- Date: 2026-09-11 Asia/Shanghai.
+- Operator/agent: Codex.
+- Tool/server: unreal-mcp at http://127.0.0.1:8000/mcp plus project scripts Tools/Assets/export_blender_static_mesh_fbx.ps1 and Tools/MCP/import_static_mesh_via_ue_mcp.ps1.
+- Mode: UE MCP / editor script.
+- Purpose: Turn the previously verified Blender -> FBX -> UE MCP StaticMesh import path into reusable project scripts, then validate them against the existing dry-run staging asset.
+- Git recovery point: f1d3d54d88a8064e6ef2f1d0c8f13c12ed2e4f94.
+- Project MCP config checked: .codex/config.toml.
+- UE MCP state: started through Tools/MCP/start_ue_mcp_editor.ps1 -Port 8000 for this validation, then stopped after import.
+- Blender MCP safe mode confirmed: not applicable; Blender is invoked directly in background mode for deterministic FBX export from an existing staging .blend.
+- Read-only discovery commands: script initialized MCP JSON-RPC, called tools/list, verified list_toolsets/describe_toolset/call_tool, and described editor_toolset.toolsets.static_mesh.StaticMeshTools before importing.
+- Target paths/assets/objects: source Content/NewWorld/AIWork/MCP_DryRun/SM_MCP_DryRun_Blockout_A.blend and generated FBX; UE package /Game/NewWorld/AIWork/MCP_DryRun/SM_MCP_DryRun_Blockout_A.
+- Allowed write scope: Content/NewWorld/AIWork/MCP_DryRun and Docs/Planning/MCP_Evidence/2026-09-11_UE_MCP_Import_Script_DryRun only.
+- Explicitly forbidden paths: production Content/NewWorld directories outside AIWork, .codex/config.toml, user-level Codex config, user-level skills, and project settings outside existing staging import side effects.
+- Python/script execution needed: yes, Blender background Python for FBX export and PowerShell JSON-RPC for MCP calls.
+- Network access needed: local loopback only.
+- .codex/config.toml risk: read-only.
+- Manifest/provenance update: not applicable; this validates tooling against an existing dry-run staging asset, not a production asset promotion.
+- Screenshot evidence required: UE asset thumbnail captured to Docs/Planning/MCP_Evidence/2026-09-11_UE_MCP_Import_Script_DryRun.
+- Logs required: script JSON summary, UE MCP tool outputs, Data Validation output.
+- Validation plan: Blender export script, UE MCP import script with -AllowOverwrite, Data Validation, MCP readiness after shutdown, AI readiness, manifest validation, git diff --check, git lfs status.
+- Rollback plan: revert this commit or delete the generated staging FBX/UAsset/thumbnail if the scripted dry run should be discarded.
+- Preflight reviewer: ue58-mcp-editor-automation and ue58-blender-mcp-asset.
+- Result: pass after script fixes for Blender object-name parsing, Blender FBX unit scale, MCP describe_toolset text parsing, StaticMesh UObject refPath format, and CaptureAssetImage returnValue parsing.
+- Changed assets/objects: Tools/Assets/export_blender_static_mesh_fbx.ps1 exported Content/NewWorld/AIWork/MCP_DryRun/SM_MCP_DryRun_Blockout_A.fbx from four named Blender mesh objects: SM_MCP_DryRun_Blockout_A_Base, SM_MCP_DryRun_Blockout_A_Step, SM_MCP_DryRun_Blockout_A_Pillar, and UCX_SM_MCP_DryRun_Blockout_A_00. Tools/MCP/import_static_mesh_via_ue_mcp.ps1 overwrote the existing staging StaticMesh package /Game/NewWorld/AIWork/MCP_DryRun/SM_MCP_DryRun_Blockout_A with -AllowOverwrite, added standard NewWorld metadata, saved the asset, and read back class StaticMesh, material slots M_MCP_DryRun_Blockout_Grey and M_MCP_DryRun_Blockout_Blue, bounds min -100/-60/0 and max 100/60/170 cm, 84 triangles, 144 vertices, 1 LOD, and Nanite=false.
+- Screenshots/logs captured: script saved Docs/Planning/MCP_Evidence/2026-09-11_UE_MCP_Import_Script_DryRun/SM_MCP_DryRun_Blockout_A_ue_asset_thumbnail.png and printed compact JSON summaries for the Blender export and UE MCP import.
+- Validation result: Blender export script passed; UE MCP import script passed; GLB rejection smoke test returned the intended local error before MCP connection; Data Validation passed with 0 errors and 2 expected AIWork/manifest warnings; Tools/MCP/check_mcp_readiness.ps1 passed after shutdown with unrealMcpPort8000Reachable=False; Tools/AI/check_ai_readiness.ps1 passed; AI_ASSET_MANIFEST.json validation passed with assets=0; git diff --check passed; git lfs status passed; no UnrealEditor process remained.
+- Remaining risk: this scripted path covers static mesh staging only. It does not promote production assets, update manifest qa_passed state, place the mesh in a level, verify runtime collision/PIE behavior, generate LODs/Nanite settings, import materials/textures, or handle skeletal meshes, animation, audio, UI, or production AI asset provenance.
+
 ### 2026-09-11 UE MCP GLB Import Staging Dry Run
 
 - Date: 2026-09-11 Asia/Shanghai.

@@ -8,6 +8,7 @@ Required context: .codex/skills/project/ue58-asset-pipeline/SKILL.md, Docs/Promp
 For every generated asset, define role, target path, approved prompt, model/provider, parameters, source references, license/provenance, technical contract, QA checklist, and approval state.
 Use AIART image generation with inferenceMode gpt by default. Prefer the strongest available quality tier; use Hyper3D extremeHigh and Tripo detailed only when the current capability supports them and they fit the task.
 For Blender MCP or UE MCP handoff, read .codex/skills/project/ue58-mcp-editor-automation/SKILL.md and keep all writes in AIWork or staging until QA passes.
+For AI 3D/Blender static mesh handoff, plan GLB/GLTF as interchange and Tools/Assets/export_blender_static_mesh_fbx.ps1 as the FBX export gate before Tools/MCP/import_static_mesh_via_ue_mcp.ps1.
 Do not call generation tools unless the task explicitly asks for generation and the approved prompt rule is satisfied.
 Return: manifest/register update needs, candidate plan, model parameters, staging path, QA gate, and UE import handoff.
 """

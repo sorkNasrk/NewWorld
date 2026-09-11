@@ -6,6 +6,7 @@ developer_instructions = """
 Review MCP plans before execution.
 Required context: .codex/skills/project/ue58-mcp-editor-automation/SKILL.md and Docs/Planning/MCP_OPERATION_AUDIT.md.
 Check project .codex/config.toml, selected UE MCP plugin scope, bAutoStartServer=False, BLENDER_MCP_SAFE_MODE=1, read-only discovery first, write scope, target paths, recovery point, config overwrite risk, Python/script execution, network exposure, screenshots/logs, Data Validation, and rollback path.
+For StaticMesh import plans, require FBX/OBJ input for Tools/MCP/import_static_mesh_via_ue_mcp.ps1, reject direct GLB/GLTF on the verified UE MCP path, and check that UObject readback uses full refPath values.
 Flag unsafe batch writes, production asset overwrites, missing provenance, and vague success criteria.
 Do not execute tools or edit assets.
 Return: approval blockers, required plan fixes, and remaining risk.

@@ -42,6 +42,8 @@ Project-level Codex skills remain in .codex/skills/project or .codex/skills/vend
 - MCP audit: Docs/Planning/MCP_OPERATION_AUDIT.md
 - MCP config: .codex/config.toml
 - MCP scripts: Tools/MCP/check_mcp_readiness.ps1, Tools/MCP/start_ue_mcp_editor.ps1, Tools/MCP/start_blender_mcp_session.ps1
+- Blender static mesh FBX export: Tools/Assets/export_blender_static_mesh_fbx.ps1
+- UE MCP static mesh import: Tools/MCP/import_static_mesh_via_ue_mcp.ps1
 - UE asset policy validator: Source/NewWorldEditor/Private/NewWorldAssetPolicyValidator.cpp
 - Retrospectives: Docs/Planning/AI_PRODUCTION_RETROSPECTIVES.md
 - Readiness script: Tools/AI/check_ai_readiness.ps1
@@ -86,8 +88,19 @@ Start UE MCP manually:
 powershell -ExecutionPolicy Bypass -File Tools/MCP/start_ue_mcp_editor.ps1 -Port 8000
 ~~~
 
+Export a staged Blender static mesh FBX:
+~~~powershell
+powershell -ExecutionPolicy Bypass -File Tools/Assets/export_blender_static_mesh_fbx.ps1 -BlendPath Content/NewWorld/AIWork/MCP_DryRun/SM_MCP_DryRun_Blockout_A.blend -OutputFbx Content/NewWorld/AIWork/MCP_DryRun/SM_MCP_DryRun_Blockout_A.fbx
+~~~
+
+Import a staged StaticMesh through UE MCP:
+~~~powershell
+powershell -ExecutionPolicy Bypass -File Tools/MCP/import_static_mesh_via_ue_mcp.ps1 -SourceFile Content/NewWorld/AIWork/MCP_DryRun/SM_MCP_DryRun_Blockout_A.fbx -FolderPath /Game/NewWorld/AIWork/MCP_DryRun -AssetName SM_MCP_DryRun_Blockout_A -AllowOverwrite
+~~~
+
 ## MCP Policy
 
 UE MCP default assumption: experimental, Editor target only, manual start, 127.0.0.1:8000/mcp, tool search enabled.
+UE MCP StaticMesh import path currently uses StaticMeshTools.import_file through FbxFactory; use FBX/OBJ for that path, and treat GLB/GLTF as Blender/AI 3D interchange formats that need conversion before UE MCP import.
 Blender MCP default assumption: safe mode on, one client connected, staging only.
 No MCP tool may batch-write production Content without manifest, recovery point, screenshot/log evidence, and Data Validation plan.

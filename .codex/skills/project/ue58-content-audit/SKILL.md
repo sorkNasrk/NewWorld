@@ -22,6 +22,7 @@ Audit content before it moves out of Content/NewWorld/AIWork or before accepting
 - LFS tracks binary/source art formats.
 - Redirectors and missing references are resolved before acceptance.
 - Import settings match type: mesh, skeletal mesh, texture, material, audio, UI, font, Niagara, cinematic, or localization.
+- StaticMesh assets imported through UE MCP should come from FBX/OBJ, not direct GLB/GLTF; check the Tools/MCP/import_static_mesh_via_ue_mcp.ps1 summary for source file, bounds, material slots, triangle count, vertex count, LOD count, Nanite state, metadata, and evidence thumbnail.
 - UE Data Validation hard-checks /Game/NewWorld prefix shape, AIWork staging, AI_ASSET_MANIFEST readiness for promoted AI assets, and MCP staging markers through NewWorldEditor.
 - Manual QA still covers visual quality, topology, UVs, material setup, audio audition, UI focus, localization readability, and screenshots.
 
