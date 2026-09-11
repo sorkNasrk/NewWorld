@@ -53,6 +53,36 @@ Use this template before and after UE MCP, Blender MCP, editor scripting, or any
 
 ## Operation Records
 
+### 2026-09-11 Blender MCP Safe-Mode Dry Run
+
+- Date: 2026-09-11 Asia/Shanghai.
+- Operator/agent: Codex.
+- Tool/server: blender via project-level .codex/config.toml.
+- Mode: Blender MCP.
+- Purpose: Verify project-level Codex can connect to Blender MCP in safe mode, read scene/addon state, create a non-production staging blockout, capture viewport evidence, export a staging GLB, and shut down the temporary Blender process.
+- Git recovery point: 7dfb369f078650e5273e852dcd8caa9f6cffc166.
+- Project MCP config checked: .codex/config.toml.
+- UE MCP state: not running; not applicable for this dry run.
+- Blender MCP safe mode confirmed: yes. .codex/config.toml contains BLENDER_MCP_SAFE_MODE=1, and the first write attempt was rejected by safe mode because it imported os.
+- Read-only discovery commands: codex -C G:\NewWorld mcp list; codex -C G:\NewWorld mcp get blender; Tools/MCP/start_blender_mcp_session.ps1; blender get_addon_status; blender get_scene_info.
+- Target paths/assets/objects: BLD_MCP_DryRun_Blockout test objects only.
+- Allowed write scope: Content/NewWorld/AIWork/MCP_DryRun/ and Docs/Planning/MCP_Evidence/2026-09-11_BlenderMCP_DryRun/.
+- Explicitly forbidden paths: production Content/NewWorld directories outside AIWork, .codex/config.toml, user-level Codex config, user-level skills, UE project config.
+- Python/script execution needed: yes, only Blender Python through MCP for scene setup, blockout creation, screenshot staging, .blend save, and GLB export.
+- Network access needed: no.
+- .codex/config.toml risk: read-only.
+- Manifest/provenance update: not applicable; no production asset generated or promoted.
+- Screenshot evidence required: viewport screenshot after creating the staging blockout.
+- Logs required: Blender MCP tool outputs, exported file list, process shutdown check.
+- Validation plan: MCP readiness, AI readiness, manifest validation, git diff --check.
+- Rollback plan: delete the dry-run staging directory, evidence directory, and this audit record if the dry run should be discarded.
+- Preflight reviewer: project MCP rules in ue58-mcp-editor-automation and ue58-blender-mcp-asset.
+- Result: pass for live Blender MCP safe-mode dry run.
+- Changed assets/objects: Created a non-production staging Blender scene and GLB under Content/NewWorld/AIWork/MCP_DryRun. Blender scene objects: SM_MCP_DryRun_Blockout_A_Base, SM_MCP_DryRun_Blockout_A_Step, SM_MCP_DryRun_Blockout_A_Pillar, UCX_SM_MCP_DryRun_Blockout_A_00, SM_MCP_DryRun_Blockout_A_ReferencePlane, REF_MCP_DryRun_OneMeter, CAM_MCP_DryRun_ThreeQuarter, and L_MCP_DryRun_Key.
+- Screenshots/logs captured: Saved front, side, and three-quarter evidence screenshots under Docs/Planning/MCP_Evidence/2026-09-11_BlenderMCP_DryRun. MCP get_addon_status reported protocol_version 5, addon_version 1.6, Blender 5.2.1 LTS, telemetry_consent false, and no warning. MCP get_scene_info returned 8 objects after the write. MCP get_object_info confirmed SM_MCP_DryRun_Blockout_A_Base has applied scale 1.0 and bounds from -1.0/-0.6/0.0 to 1.0/0.6/0.5. MCP viewport screenshot returned an image/png block.
+- Validation result: MCP readiness passed; AI readiness passed; AI_ASSET_MANIFEST.json validation passed with assets=0; git diff --check passed; Git LFS filter applies to the .blend, .glb, and .png evidence files; temporary Blender PID 56652 was stopped and no Blender process remained.
+- Remaining risk: This did not test AI 3D generation, reference image planes from real concept art, UE import, Data Validation on imported .uasset files, or any production Content write.
+
 ### 2026-09-11 UE MCP Read-Only Smoke Test
 
 - Date: 2026-09-11 Asia/Shanghai.
