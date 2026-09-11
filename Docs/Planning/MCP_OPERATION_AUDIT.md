@@ -53,6 +53,36 @@ Use this template before and after UE MCP, Blender MCP, editor scripting, or any
 
 ## Operation Records
 
+### 2026-09-11 UE MCP GLB Import Staging Dry Run
+
+- Date: 2026-09-11 Asia/Shanghai.
+- Operator/agent: Codex.
+- Tool/server: unreal-mcp at http://127.0.0.1:8000/mcp.
+- Mode: UE MCP.
+- Purpose: Import the Blender MCP dry-run mesh source into UE staging content, verify imported assets through read-only MCP queries, run Data Validation, and shut down the temporary Editor process.
+- Git recovery point: eb738f0c2a0037d3cc0cc739aa9a0cfbef827d57.
+- Project MCP config checked: .codex/config.toml.
+- UE MCP state: pending manual script start through Tools/MCP/start_ue_mcp_editor.ps1 -Port 8000.
+- Blender MCP safe mode confirmed: not applicable.
+- Read-only discovery commands: codex -C G:\NewWorld mcp list; codex -C G:\NewWorld mcp get unreal-mcp; JSON-RPC initialize; tools/list; resources/list; list_toolsets; describe_toolset for AssetTools, StaticMeshTools, and Logs before import.
+- Target paths/assets/objects: source files Content/NewWorld/AIWork/MCP_DryRun/SM_MCP_DryRun_Blockout_A.glb and fallback FBX export; UE package path /Game/NewWorld/AIWork/MCP_DryRun.
+- Allowed write scope: /Game/NewWorld/AIWork/MCP_DryRun and matching Content/NewWorld/AIWork/MCP_DryRun filesystem packages only.
+- Explicitly forbidden paths: production Content/NewWorld directories outside AIWork, .codex/config.toml, user-level Codex config, user-level skills, Project Settings outside import side effects.
+- Python/script execution needed: yes for deterministic Blender background FBX export after UE MCP reported that StaticMeshTools.import_file uses FbxFactory and does not support .glb.
+- Network access needed: local loopback only.
+- .codex/config.toml risk: read-only.
+- Manifest/provenance update: not applicable; this is a committed dry-run staging asset, not production AI generation or promotion.
+- Screenshot evidence required: UE asset thumbnail captured after import; no level placement planned.
+- Logs required: UE MCP tool outputs, LogModelContextProtocol and import/log excerpts, generated package list, process shutdown check.
+- Validation plan: MCP readiness with UE running, Data Validation, AI readiness, manifest validation, git diff --check, Git LFS status.
+- Rollback plan: delete imported .uasset files under Content/NewWorld/AIWork/MCP_DryRun and this audit record if the dry run should be discarded.
+- Preflight reviewer: project MCP rules in ue58-mcp-editor-automation, ue58-content-audit, and ue58-build-test-runner.
+- Result: pass for UE MCP staging import after GLB fallback.
+- Changed assets/objects: UE MCP StaticMeshTools.import_file first rejected SM_MCP_DryRun_Blockout_A.glb because the tool uses FbxFactory and supports only fbx/obj. A deterministic Blender background export created Content/NewWorld/AIWork/MCP_DryRun/SM_MCP_DryRun_Blockout_A.fbx from the existing staging .blend. UE MCP then imported /Game/NewWorld/AIWork/MCP_DryRun/SM_MCP_DryRun_Blockout_A as a StaticMesh and saved Content/NewWorld/AIWork/MCP_DryRun/SM_MCP_DryRun_Blockout_A.uasset. Metadata tags were added for NewWorld.Workflow=UE_MCP_Import_DryRun, NewWorld.Staging=AIWork, NewWorld.MCP=true, SourceBlend, SourceFbx, SourceGlbUnsupportedByMcpImport=true, and GitRecoveryPoint.
+- Screenshots/logs captured: Saved UE asset thumbnail at Docs/Planning/MCP_Evidence/2026-09-11_UE_MCP_Import_DryRun/SM_MCP_DryRun_Blockout_A_ue_asset_thumbnail.png. MCP logs captured the GLB rejection, FBX FactoryCreateFile, FBX scene load, static mesh build, and SavePackage for the imported asset. MCP readback returned class StaticMesh, material slots M_MCP_DryRun_Blockout_Grey and M_MCP_DryRun_Blockout_Blue, bounds min -100/-60/0 and max 100/60/170 cm, 84 triangles, 144 vertices, 1 LOD, Nanite=false, and save_assets=true.
+- Validation result: Data Validation passed with 0 errors and 2 expected warnings from NewWorldAssetPolicyValidator: the asset is in AIWork staging and has no matching manifest entry yet. MCP readiness passed after shutdown with unrealMcpPort8000Reachable=False; AI readiness passed; AI_ASSET_MANIFEST.json validation passed with assets=0; git diff --check passed; Git LFS filter applies to the .fbx, .uasset, and UE thumbnail .png files; temporary Unreal Editor PID 83784 was stopped and no UnrealEditor process remained.
+- Remaining risk: GLB is not accepted by UE MCP StaticMeshTools.import_file in this UE5.8 toolset, so Blender/AI 3D output needs FBX or OBJ conversion before this MCP import path. This did not test production asset promotion, manifest qa_passed flow, in-level placement, collision behavior in PIE, Nanite/LOD edits, or imported materials/textures.
+
 ### 2026-09-11 Blender MCP Safe-Mode Dry Run
 
 - Date: 2026-09-11 Asia/Shanghai.
