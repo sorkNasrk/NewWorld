@@ -1,0 +1,33 @@
+# Unreal generated files
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+
+# IDE and local user state
+.vs/
+.vscode/.browse.VC.db*
+.vscode/ipch/
+*.sln
+*.slnx
+*.VC.db
+*.opensdf
+*.sdf
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build and package output
+LocalBuilds/
+Releases/
+PackagedBuilds/
+
+# Runtime logs and crash output
+*.log
+*.dmp
+
+# OS noise
+Thumbs.db
+Desktop.ini
+.DS_Store
