@@ -2,19 +2,19 @@
 
 ## Generate First, Then Clean In Blender
 
-Use this route for natural rocks, ruins, vegetation block-ins, rough creatures, style exploration, mid-distance props, and assets where silhouette variety matters more than exact dimensions.
+Use `ai_3d_then_blender` for natural rocks, ruins, vegetation block-ins, rough creatures, style exploration, mid-distance props, and assets where silhouette variety matters more than exact dimensions.
 
 Reject and regenerate when category, silhouette, proportions, pose, or topology are fundamentally wrong.
 
 ## Build Directly In Blender MCP
 
-Use this route for modular architecture, hard-surface props, measured set pieces, collision proxies, LOD preparation, pivot/origin fixes, UV/material-slot cleanup, and batch repairs.
+Use `blender_mcp_direct` for modular architecture, hard-surface props, measured set pieces, collision proxies, LOD preparation, pivot/origin fixes, UV/material-slot cleanup, and batch repairs.
 
 Require orthographic references and dimensions before asking Blender MCP to build precise assets.
 
 ## Specialist DCC Required
 
-Characters, facial rigs, hair, cloth, final skin weights, hero animation, and high-quality deformation need specialist review. Blender MCP can stage, inspect, rename, and export, but should not be the only quality gate.
+Use `manual_dcc_required` for characters, facial rigs, hair, cloth, final skin weights, hero animation, and high-quality deformation. Blender MCP can stage, inspect, rename, and export, but should not be the only quality gate.
 
 ## Reference Images
 
@@ -27,5 +27,5 @@ Use the project-level .codex/config.toml blender server. It launches uvx with Py
 Before using Blender MCP, run:
 
 ~~~powershell
-powershell -ExecutionPolicy Bypass -File Tools/MCP/start_blender_mcp_session.ps1
+python Tools/MCP/start_blender_mcp_session.py
 ~~~

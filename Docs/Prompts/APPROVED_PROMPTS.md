@@ -8,6 +8,11 @@ Draft prompts with Docs/Prompts/PROMPT_CONTRACTS.md. Once a prompt is marked app
 
 - Asset or task id:
 - Prompt type: image / reference_pack / 3d / blender_mcp / texture / material / animation / rig / audio / music / voice / ui / icon / cinematic
+- creation_route:
+- route_decision_reason:
+- authoring_tools:
+- reference_pack_required:
+- route_review_status:
 - Intended use:
 - Target UE path:
 - Approved prompt:

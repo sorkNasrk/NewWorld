@@ -196,11 +196,12 @@ After every write batch, capture evidence: changed assets, screenshot or PIE res
 - 项目级 Codex MCP 配置：.codex/config.toml。
 - UE MCP server：unreal-mcp -> http://127.0.0.1:8000/mcp。
 - Blender MCP server：blender -> uvx + Python 3.12 + blender-mcp，BLENDER_MCP_SAFE_MODE=1。
-- UE MCP 启动脚本：Tools/MCP/start_ue_mcp_editor.ps1。
-- MCP 检查脚本：Tools/MCP/check_mcp_readiness.ps1。
-- Blender MCP 环境检查脚本：Tools/MCP/start_blender_mcp_session.ps1。
-- Blender 静态网格 FBX 导出脚本：Tools/Assets/export_blender_static_mesh_fbx.ps1。
-- UE MCP StaticMesh staging 导入脚本：Tools/MCP/import_static_mesh_via_ue_mcp.ps1。
+- UE MCP 启动脚本：Tools/MCP/start_ue_mcp_editor.py。
+- MCP 检查脚本：Tools/MCP/check_mcp_readiness.py。
+- Blender MCP 环境检查脚本：Tools/MCP/start_blender_mcp_session.py。
+- Blender 静态网格 FBX 导出脚本：Tools/Assets/export_blender_static_mesh_fbx.py。
+- UE MCP StaticMesh staging 导入脚本：Tools/MCP/import_static_mesh_via_ue_mcp.py。
+- 资产生产路线文档：Docs/Assets/ASSET_PRODUCTION_ROUTES.md。
 - 禁止项：AllToolsets、AIAssistant、bAutoStartServer=True、0.0.0.0 绑定、用户级 Codex 配置自动修改。
 
 2026-09-11 NewWorld 实测结论：当前 UE5.8 StaticMeshTools.import_file 通过 FbxFactory 导入，直接传 .glb/.gltf 会被拒绝；该路径已验证可用输入为 FBX/OBJ。AI 3D 和 Blender 可继续使用 GLB 做中间交换，但进入 UE MCP StaticMesh 导入前必须导出或转换为 FBX/OBJ。StaticMesh 回读时，MCP UObject 参数必须使用完整 object path 的 refPath，例如 /Game/NewWorld/AIWork/MCP_DryRun/SM_MCP_DryRun_Blockout_A.SM_MCP_DryRun_Blockout_A。
@@ -269,7 +270,7 @@ Blender MCP 当前项目级配置：
 ~~~powershell
 # 不要为本项目运行 codex mcp add；该命令默认修改用户级 Codex 配置。
 # 项目配置源是 G:\NewWorld\.codex\config.toml。
-powershell -ExecutionPolicy Bypass -File Tools/MCP/start_blender_mcp_session.ps1
+python Tools/MCP/start_blender_mcp_session.py
 ~~~
 
 项目配置等价形式：
@@ -405,7 +406,7 @@ G:\UnrealEngineInstalled\UE_5.8\Engine\Binaries\Win64\UnrealEditor-Cmd.exe <PROJ
 - Packaging smoke test。
 - 日志路径：Saved/Logs、Saved/Crashes、AutomationReports。
 
-当前 NewWorld 已将第一批资产规则落成 UE Data Validation：NewWorldEditor 模块中的 UNewWorldAssetPolicyValidator 只验证 /Game/NewWorld，检查正式资产前缀、[Prefix]_[Name]_[Descriptor]_[Variant] 形态、AIWork staging、AI_ASSET_MANIFEST.json 状态，以及 MCP staging 标记。ThirdPerson 模板资产暂不纳入项目规则，避免早期模板内容阻塞验证。
+当前 NewWorld 已将资产规则落成 UE Data Validation：NewWorldEditor 模块中的 UNewWorldAssetPolicyValidator 只验证 /Game/NewWorld，检查正式资产前缀、[Prefix]_[Name]_[Descriptor]_[Variant] 形态、AIWork staging、AI_ASSET_MANIFEST.json 状态、creation_route 记录、MCP staging 标记，以及 StaticMesh/Texture/Material 的第一层质量问题。ThirdPerson 模板资产暂不纳入项目规则，避免早期模板内容阻塞验证。
 
 Data Validation 应至少检查：
 
@@ -417,7 +418,7 @@ Data Validation 应至少检查：
 - Skeletal Mesh skeleton、PhysicsAsset、LOD、材质槽。
 - SoundWave 命名、响度、循环点、并发策略。
 - WBP 字体、分辨率适配、CommonUI 输入路由。
-- 每个 AI 资产有 provenance 记录。
+- 每个 AI 或工具生成资产有 creation_route 和 provenance 记录。
 
 ## 7. 推荐项目级 agents
 
@@ -507,7 +508,7 @@ MCP 的价值不是“让 AI 一次做完美术”，而是把外部工具接入
 | Reference | 生成/整理正交图、3/4 图、材质板、比例尺、Do/Don't | 建 image planes、相机、比例尺、blockout 场景 | 无 | 选定轮廓、比例和风格 |
 | 3D candidate | 调用或规划 AI 3D 生成，多候选比较 | 导入 GLB/OBJ/FBX、检查 mesh、截图、修比例 | 无 | 决定重生成还是继续清理 |
 | Cleanup | 记录问题和清理 checklist | 改 scale、origin、pivot、法线、材质槽、简化、碰撞代理、LOD 草案 | 无 | 检查近景质量和艺术一致性 |
-| UE import | 生成导入任务、命名、路径、manifest | 用 Tools/Assets/export_blender_static_mesh_fbx.ps1 导出 FBX/OBJ；GLB 只做中间交换 | 用 Tools/MCP/import_static_mesh_via_ue_mcp.ps1 导入、写 metadata、保存、回读 bounds/material/LOD/Nanite、截图 | 验收真实 game camera |
+| UE import | 生成导入任务、命名、路径、manifest | 用 Tools/Assets/export_blender_static_mesh_fbx.py 导出 FBX/OBJ；GLB 只做中间交换 | 用 Tools/MCP/import_static_mesh_via_ue_mcp.py 导入、写 metadata、保存、回读 bounds/material/LOD/Nanite、截图 | 验收真实 game camera |
 | Validation | 汇总日志、截图、Data Validation、provenance | 产出前后对比截图和 .blend 来源 | 运行 PIE/Data Validation/asset query | 批准从 AIWork 移入正式目录 |
 
 MCP 写操作必须小批量执行。推荐每次只处理一个资产或一个明确模块套件，直到流程稳定后再批量化。
@@ -631,7 +632,7 @@ Blender MCP 适合当作“可脚本化 DCC 工作台”。Codex 应先查询场
 
 当前项目接入流程：
 
-1. 运行 Tools/MCP/start_blender_mcp_session.ps1，确认 uvx、Python、Blender 路径和 BLENDER_MCP_SAFE_MODE=1。
+1. 运行 Tools/MCP/start_blender_mcp_session.py，确认 uvx、Python、Blender 路径和 BLENDER_MCP_SAFE_MODE=1。
 2. 打开 Blender，启用 MCP for Blender addon，只连接一个 MCP client。
 3. Codex 先调用场景查询能力，确认当前文件、单位、对象数量、collection、相机、材质和选中对象。
 4. 每个资产建立 collection：REF、BLOCKOUT、HIGH、LOW、COLLISION、EXPORT。
@@ -640,7 +641,7 @@ Blender MCP 适合当作“可脚本化 DCC 工作台”。Codex 应先查询场
 7. 每轮修改后导出截图：front、side、3/4、wireframe、material preview。
 8. 导出前运行 Blender 侧检查：非流形面、重复点、法线方向、未命名对象、未应用 scale、空材质槽、过高面数。
 9. 导出到 staging，不直接覆盖正式 UE Content。
-10. 静态网格进入 UE MCP 导入前，使用 Tools/Assets/export_blender_static_mesh_fbx.ps1 从 .blend 导出 FBX。明确传入渲染 mesh 和 UCX 碰撞对象名；脚本默认输出只能位于 Content/NewWorld/AIWork，并按 UE 厘米单位导出。
+10. 静态网格进入 UE MCP 导入前，使用 Tools/Assets/export_blender_static_mesh_fbx.py 从 .blend 导出 FBX。明确传入渲染 mesh 和 UCX 碰撞对象名；脚本默认输出只能位于 Content/NewWorld/AIWork，并按 UE 厘米单位导出。
 11. 如果上游 AI 3D 只产出 GLB/GLTF，先在 Blender 中检查比例、pivot、法线、材质槽和碰撞，再导出 FBX/OBJ。当前 UE MCP StaticMeshTools.import_file 路径不接受直接 GLB/GLTF。
 
 Blender MCP 任务提示应包含：
@@ -665,14 +666,14 @@ UE MCP 导入格式：FBX/OBJ；GLB/GLTF 仅作为 Blender/AI 3D 中间交换
 
 ### 11.2 AI 3D 生成 vs Blender MCP 直接建模决策树
 
-| 资产类型 | 推荐路径 | 原因 |
+| 资产类型 | creation_route / 推荐路径 | 原因 |
 | --- | --- | --- |
-| 岩石、废墟、树桩、自然碎片、远景雕塑 | AI 3D 生成多候选 -> Blender 清理 -> UE 导入 | 不规则轮廓对生成模型友好，人工建模性价比低 |
-| 箱子、瓶罐、路障、门框、栏杆、管线、模块墙体 | Blender MCP 直接建模或程序化生成 | 尺寸、直线、pivot、snap、碰撞比随机细节更重要 |
-| 武器、载具部件、机关、可开合道具 | Blender MCP blockout -> 局部 AI reference/texture -> 手工或脚本细化 | 需要精确拓扑、分件、铰链、碰撞和动画轴 |
-| 主角、主要敌人、脸、手、布料、头发 | AI 概念和 3D 候选 -> 专门 retopo/rig/weight -> UE retarget | 生成模型可给体量和风格，但变形质量必须专项处理 |
-| 大场景 set dressing | Blender MCP/UE MCP 组装资产库和 PCG -> 截图验收 | 关键是布局、尺度、密度、遮挡、性能和可复现 seed |
-| UI 3D 装饰、icon source mesh、简单 VFX mesh | Blender MCP 直接建模 -> 渲染/导出 | 需要干净轮廓、透明背景和可重复变体 |
+| 岩石、废墟、树桩、自然碎片、远景雕塑 | ai_3d_then_blender：AI 3D 生成多候选 -> Blender 清理 -> UE 导入 | 不规则轮廓对生成模型友好，人工建模性价比低 |
+| 箱子、瓶罐、路障、门框、栏杆、管线、模块墙体 | blender_mcp_direct 或 procedural_tool_generated：Blender MCP 直接建模或程序化生成 | 尺寸、直线、pivot、snap、碰撞比随机细节更重要 |
+| 武器、载具部件、机关、可开合道具 | hybrid：Blender MCP blockout -> 局部 AI reference/texture -> 手工或脚本细化 | 需要精确拓扑、分件、铰链、碰撞和动画轴 |
+| 主角、主要敌人、脸、手、布料、头发 | manual_dcc_required：AI 概念和 3D 候选 -> 专门 retopo/rig/weight -> UE retarget | 生成模型可给体量和风格，但变形质量必须专项处理 |
+| 大场景 set dressing | ue_mcp_assembly 或 procedural_tool_generated：Blender MCP/UE MCP 组装资产库和 PCG -> 截图验收 | 关键是布局、尺度、密度、遮挡、性能和可复现 seed |
+| UI 3D 装饰、icon source mesh、简单 VFX mesh | blender_mcp_direct：Blender MCP 直接建模 -> 渲染/导出 | 需要干净轮廓、透明背景和可重复变体 |
 
 重生成阈值：
 
@@ -690,7 +691,7 @@ AI 3D 生成能力使用规范：
 4. Tripo 贴图可用且适合时默认 textureQuality: detailed。
 5. Hunyuan3D、Rodin 或其他模型只在当前接口实际开放且输入匹配时选择；不要虚构全局最强排名。
 6. GLB 适合作为 Blender 中间格式；NewWorld 当前已验证 UE MCP StaticMesh 导入路径使用 FbxFactory，正式 UE MCP 导入前必须转换为 FBX/OBJ。
-7. 生成资产只进入 AIWork/Staging，并必须记录 prompt、模型、参数、时间、引用和许可证/provenance。
+7. 生成资产只进入 AIWork/Staging，并必须记录 creation_route、route_decision_reason、authoring_tools、prompt、模型、参数、时间、引用和许可证/provenance。
 
 ### 11.3 静态物件和环境模型
 
@@ -722,11 +723,11 @@ AI 3D 生成能力使用规范：
 NewWorld 已验证静态网格 staging 命令：
 
 ~~~powershell
-powershell -ExecutionPolicy Bypass -File Tools/Assets/export_blender_static_mesh_fbx.ps1 -BlendPath Content/NewWorld/AIWork/MCP_DryRun/SM_MCP_DryRun_Blockout_A.blend -OutputFbx Content/NewWorld/AIWork/MCP_DryRun/SM_MCP_DryRun_Blockout_A.fbx -ObjectNames SM_MCP_DryRun_Blockout_A_Base,SM_MCP_DryRun_Blockout_A_Step,SM_MCP_DryRun_Blockout_A_Pillar,UCX_SM_MCP_DryRun_Blockout_A_00
+python Tools/Assets/export_blender_static_mesh_fbx.py --blend-path Content/NewWorld/AIWork/MCP_DryRun/SM_MCP_DryRun_Blockout_A.blend --output-fbx Content/NewWorld/AIWork/MCP_DryRun/SM_MCP_DryRun_Blockout_A.fbx --object-names SM_MCP_DryRun_Blockout_A_Base,SM_MCP_DryRun_Blockout_A_Step,SM_MCP_DryRun_Blockout_A_Pillar,UCX_SM_MCP_DryRun_Blockout_A_00
 ~~~
 
 ~~~powershell
-powershell -ExecutionPolicy Bypass -File Tools/MCP/import_static_mesh_via_ue_mcp.ps1 -SourceFile Content/NewWorld/AIWork/MCP_DryRun/SM_MCP_DryRun_Blockout_A.fbx -FolderPath /Game/NewWorld/AIWork/MCP_DryRun -AssetName SM_MCP_DryRun_Blockout_A -AllowOverwrite -EvidenceDirectory Docs/Planning/MCP_Evidence/2026-09-11_UE_MCP_Import_Script_DryRun
+python Tools/MCP/import_static_mesh_via_ue_mcp.py --source-file Content/NewWorld/AIWork/MCP_DryRun/SM_MCP_DryRun_Blockout_A.fbx --folder-path /Game/NewWorld/AIWork/MCP_DryRun --asset-name SM_MCP_DryRun_Blockout_A --allow-overwrite --evidence-directory Docs/Planning/MCP_Evidence/2026-09-11_UE_MCP_Import_Script_DryRun
 ~~~
 
 UE 官方约束：
@@ -1530,6 +1531,11 @@ Do not execute tools or edit assets.
 
 - Role: greybox replacement for exploration cliff set
 - Status: WIP
+- creation_route: ai_3d_then_blender
+- route_decision_reason: organic mid-distance cliff prop where silhouette variation matters more than exact dimensions
+- authoring_tools: AIART model3d, Blender, UE MCP
+- reference_pack_required: true
+- route_review_status: pending
 - Source tool: AIART model3d
 - Model/provider: Hyper3D Gen 2.5
 - Parameters: modelVariant=extremeHigh, polygonType=triangle, target faces TBD, texture size TBD
@@ -1555,52 +1561,56 @@ Do not execute tools or edit assets.
 
 ~~~json
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "project": "NewWorld",
-  "art_direction_brief": "Docs/Art/art-direction-brief.md",
+  "staging_root": "Content/NewWorld/AIWork",
+  "production_root": "Content/NewWorld",
+  "art_direction_brief": "Docs/Art/ART_DIRECTION_BRIEF.md",
+  "asset_production_routes": "Docs/Assets/ASSET_PRODUCTION_ROUTES.md",
   "assets": [
     {
-      "id": "rock-cliff-a",
-      "ue_name": "SM_AI_Rock_Cliff_A_WIP",
-      "role": "environment cliff prop",
-      "status": "wip",
+      "asset_id": "SM_AI_Rock_Cliff_A_WIP",
+      "asset_type": "static_mesh",
+      "status": "draft_prompt",
+      "creation_route": "ai_3d_then_blender",
+      "route_decision_reason": "Organic mid-distance cliff prop where silhouette variation matters more than exact dimensions.",
+      "authoring_tools": ["AIART model3d", "Blender", "UE MCP"],
+      "reference_pack_required": true,
+      "route_review_status": "pending",
       "staging_path": "Content/NewWorld/AIWork/Environment/Rocks/",
-      "final_path": "",
-      "technical": {
-        "asset_type": "static_mesh",
-        "scale": "UE centimeters",
-        "pivot": "bottom-center",
-        "collision": "simple or UCX",
-        "lod_or_nanite": "TBD",
-        "texture_budget": "2048 default unless hero asset",
-        "blender_mcp_plan": "reference image planes -> blockout -> cleanup -> screenshots -> staged export"
-      },
-      "source": {
-        "kind": "generated",
-        "tool": "AIART",
-        "model": "",
-        "parameters": {},
-        "prompt_status": "draft",
-        "approved_prompt": "",
-        "prompt_call_rule": "pass approved_prompt verbatim; do not rewrite, translate, expand, or add style words during tool call",
-        "references": {
-          "orthographic": [],
-          "beauty_3_4": [],
-          "silhouette": [],
-          "material_swatches": []
+      "target_path": "TBD",
+      "prompt": {
+        "approved": false,
+        "text": "",
+        "provider": "AIART",
+        "model": "Hyper3D",
+        "parameters": {
+          "modelVariant": "extremeHigh"
         },
-        "candidate_count": 0,
-        "selected_candidate_reason": "",
+        "candidate_count": 3,
+        "call_rule": "pass approved prompt verbatim"
+      },
+      "provenance": {
+        "source_tool": "",
+        "script": "",
+        "operation_record": "",
+        "seed": "",
         "created_at": "",
         "license_or_terms": ""
       },
-      "verification": {
+      "qa": {
+        "selected_candidate_reason": "",
         "dcc_cleanup": false,
         "blender_mcp_screenshots": [],
         "ue_import_review": false,
         "in_scene_review": false,
-        "data_validation": false,
         "approved_by": ""
+      },
+      "validation": {
+        "data_validation": false,
+        "lod_or_nanite_policy": "TBD",
+        "collision": "simple or UCX",
+        "texture_budget": "2048 default unless hero asset"
       }
     }
   ]

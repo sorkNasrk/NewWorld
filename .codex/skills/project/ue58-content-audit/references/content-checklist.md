@@ -2,7 +2,7 @@
 
 ## Static Mesh
 
-Check scale, pivot, orientation, applied transforms, normals, UV0/UV1, material slots, collision, bounds, LOD/Nanite policy, naming, and Data Validation.
+Check scale, pivot, orientation, applied transforms, normals, UV0/UV1, material slots, collision, bounds, LOD/Nanite policy, creation_route, naming, and Data Validation.
 
 ## Skeletal Mesh And Animation
 
@@ -22,4 +22,4 @@ Check WBP naming, hierarchy, focus, Common UI input routing, safe area, longest 
 
 ## AI Provenance
 
-Every generated asset needs prompt, model/provider, parameters, date, task id, candidate count, selected reason, source references, license/provenance, staging path, final path, and QA result.
+Every generated or tool-authored asset needs creation_route, route_decision_reason, authoring_tools, prompt or script parameters, date, task id, candidate count or seed, selected reason, source references, license/provenance, staging path, final path, and QA result.

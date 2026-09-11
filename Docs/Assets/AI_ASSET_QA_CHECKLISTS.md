@@ -6,6 +6,7 @@ Use these checklists before generated or AI-assisted assets move out of Content/
 | --- | --- |
 | Concept / Styleboard | In-game camera readability, shape language, color/value grouping, Do/Don't examples, asset breakdown, no misleading baked effects |
 | AI Image Prompt | Approved prompt records subject, context, view, material, style, technical limits, negative constraints, model/provider, and exact call parameters |
+| Asset Production Route | `creation_route`, `route_decision_reason`, `authoring_tools`, `reference_pack_required`, and `route_review_status` match Docs/Assets/ASSET_PRODUCTION_ROUTES.md |
 | Reference Pack | Front/side/back/top orthographic, 3/4 view, silhouette, material swatches, part callouts, scale reference, no perspective distortion |
 | AI 3D Candidate | Correct category, readable silhouette, plausible scale, separable material groups, acceptable topology path, no fused critical parts |
 | Blender MCP Output | Project config checked, safe mode confirmed, scene inspected, image planes placed, units set, collections named, transforms applied, screenshots captured, staging export only |

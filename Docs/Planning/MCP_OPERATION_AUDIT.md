@@ -46,12 +46,40 @@ Use this template before and after UE MCP, Blender MCP, editor scripting, or any
 ## Current Project Defaults
 
 - UE MCP server: http://127.0.0.1:8000/mcp.
-- UE MCP startup: manual only through Tools/MCP/start_ue_mcp_editor.ps1.
+- UE MCP startup: manual only through Tools/MCP/start_ue_mcp_editor.py.
 - UE MCP tool discovery: bEnableToolSearch=True.
 - Blender MCP: project-level .codex/config.toml, BLENDER_MCP_SAFE_MODE=1.
 - Production Content writes: forbidden unless the task names the exact reviewed target and rollback path.
 
 ## Operation Records
+
+### 2026-09-11 Python Automation And Asset Route Migration
+
+- Date: 2026-09-11 Asia/Shanghai.
+- Operator/agent: Codex.
+- Tool/server: project Python scripts, UE Data Validation, and existing unreal-mcp/blender config; no external MCP write is part of the migration itself.
+- Mode: project tooling and policy migration.
+- Purpose: replace project-maintained PowerShell automation with Python entrypoints and add creation_route-based asset production rules for AI, Blender MCP, UE MCP, procedural tool, manual DCC, and hybrid workflows.
+- Git recovery point: a5561b9ef3d62b4a59eac5bf4894f8068ed1aef0.
+- Project MCP config checked: .codex/config.toml.
+- UE MCP state: not auto-started by policy; Python import validation may start UE MCP manually through Tools/MCP/start_ue_mcp_editor.py.
+- Blender MCP safe mode confirmed: required through .codex/config.toml and checked by Tools/MCP/check_mcp_readiness.py.
+- Read-only discovery commands: git status, existing readiness scripts, manifest validation, project skill/context reads, active reference search.
+- Target paths/assets/objects: project tooling under Tools, active project rules under AGENTS/.agents/.codex/Docs, and NewWorldEditor validation policy.
+- Allowed write scope: project files only; no production Content write and no user-level Codex configuration.
+- Explicitly forbidden paths: C:/Users/happyelements/.codex/skills, user-level Codex config, engine source, Marketplace plugins, and production assets outside reviewed staging.
+- Python/script execution needed: yes, for project automation migration and validation.
+- Network access needed: local loopback only when validating UE MCP import.
+- .codex/config.toml risk: read-only; no generated overwrite.
+- Manifest/provenance update: manifest schema now requires creation_route, route_decision_reason, authoring_tools, reference_pack_required, and route_review_status for future asset entries.
+- Screenshot evidence required: only when re-validating the staged StaticMesh import through UE MCP.
+- Logs required: Python script JSON summaries, Data Validation output, readiness output, build output, and git/LFS checks.
+- Validation plan: Python readiness, MCP readiness, manifest validation, active legacy script reference scan, Blender FBX export dry run, UE MCP StaticMesh import dry run, UBT project files, NewWorldEditor build, Data Validation, git diff --check, git lfs status, and final git status.
+- Rollback plan: revert the migration commit to restore previous project scripts and route policy.
+- Preflight reviewer: ue58-project-standards, ue58-asset-pipeline, ue58-mcp-editor-automation, ue58-blender-mcp-asset, ue58-content-audit, and ue58-build-test-runner.
+- Result: pass after Python CLI migration, Blender FBX export dry run, UE MCP StaticMesh import dry run, GLB/GLTF local rejection smoke test, NewWorldEditor build, and Data Validation.
+- Validation result: Python syntax checks passed; python Tools/AI/validate_ai_asset_manifest.py passed with schema_version=2 and assets=0; python Tools/MCP/check_mcp_readiness.py passed before and after UE shutdown; python Tools/AI/check_ai_readiness.py passed; active project references no longer recommend legacy PowerShell scripts; Python Blender export produced the expected 30412-byte FBX; Python UE MCP import overwrote the existing AIWork dry-run StaticMesh, wrote metadata with Tools/MCP/import_static_mesh_via_ue_mcp.py, read back class StaticMesh, two material slots, valid bounds, 84 triangles, 144 vertices, one LOD, Nanite=false, and saved a thumbnail in Docs/Planning/MCP_Evidence/2026-09-11_Python_Migration_DryRun; NewWorldEditor build passed; Data Validation passed with 0 errors and 3 expected warnings for AIWork staging, missing manifest entry, and missing NanitePolicy decision; git diff --check passed; git lfs status passed; no UnrealEditor process remained.
+- Remaining risk: Python import parity depends on the same experimental UE MCP toolsets and local loopback server behavior previously validated through the old script path. The new asset route schema is enforced for future manifest entries, but no real production asset was generated or promoted in this migration.
 
 ### 2026-09-11 UE MCP StaticMesh Import Script Dry Run
 

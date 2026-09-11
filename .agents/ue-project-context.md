@@ -27,7 +27,7 @@ Blueprint owns designer-facing composition and tuning.
 DataAssets/DataTables/Gameplay Tags own content configuration.
 AIWork is staging only.
 Formal assets need naming, import review, metadata, and validation.
-UE Data Validation enforces the first asset policy layer for /Game/NewWorld through NewWorldEditor.
+UE Data Validation enforces NewWorld asset policy for /Game/NewWorld through NewWorldEditor, including naming, AIWork staging, manifest route/status, MCP staging, and first-pass StaticMesh/Texture/Material checks.
 Project-level Codex skills remain in .codex/skills/project or .codex/skills/vendor.
 
 ## AI Workflow Artifacts
@@ -41,12 +41,13 @@ Project-level Codex skills remain in .codex/skills/project or .codex/skills/vend
 - Asset QA: Docs/Assets/AI_ASSET_QA_CHECKLISTS.md
 - MCP audit: Docs/Planning/MCP_OPERATION_AUDIT.md
 - MCP config: .codex/config.toml
-- MCP scripts: Tools/MCP/check_mcp_readiness.ps1, Tools/MCP/start_ue_mcp_editor.ps1, Tools/MCP/start_blender_mcp_session.ps1
-- Blender static mesh FBX export: Tools/Assets/export_blender_static_mesh_fbx.ps1
-- UE MCP static mesh import: Tools/MCP/import_static_mesh_via_ue_mcp.ps1
+- MCP scripts: Tools/MCP/check_mcp_readiness.py, Tools/MCP/start_ue_mcp_editor.py, Tools/MCP/start_blender_mcp_session.py
+- Blender static mesh FBX export: Tools/Assets/export_blender_static_mesh_fbx.py
+- UE MCP static mesh import: Tools/MCP/import_static_mesh_via_ue_mcp.py
+- Asset production routes: Docs/Assets/ASSET_PRODUCTION_ROUTES.md
 - UE asset policy validator: Source/NewWorldEditor/Private/NewWorldAssetPolicyValidator.cpp
 - Retrospectives: Docs/Planning/AI_PRODUCTION_RETROSPECTIVES.md
-- Readiness script: Tools/AI/check_ai_readiness.ps1
+- Readiness script: Tools/AI/check_ai_readiness.py
 - Manifest script: Tools/AI/validate_ai_asset_manifest.py
 
 ## Verification Commands
@@ -66,11 +67,11 @@ Data Validation:
 G:/UnrealEngineInstalled/UE_5.8/Engine/Binaries/Win64/UnrealEditor-Cmd.exe G:/NewWorld/NewWorld.uproject -run=DataValidation -unattended -nop4 -nosplash
 ~~~
 
-Data Validation currently checks /Game/NewWorld assets for supported prefixes, [Prefix]_[Name]_[Descriptor]_[Variant] shape, AIWork staging, AI_ASSET_MANIFEST status, and MCP staging markers.
+Data Validation currently checks /Game/NewWorld assets for supported prefixes, [Prefix]_[Name]_[Descriptor]_[Variant] shape, AIWork staging, AI_ASSET_MANIFEST status, creation_route records, MCP staging markers, and first-pass StaticMesh/Texture/Material quality.
 
 AI readiness:
 ~~~powershell
-powershell -ExecutionPolicy Bypass -File Tools/AI/check_ai_readiness.ps1
+python Tools/AI/check_ai_readiness.py
 ~~~
 
 Manifest validation:
@@ -80,22 +81,22 @@ python Tools/AI/validate_ai_asset_manifest.py Docs/Assets/AI_ASSET_MANIFEST.json
 
 MCP readiness:
 ~~~powershell
-powershell -ExecutionPolicy Bypass -File Tools/MCP/check_mcp_readiness.ps1
+python Tools/MCP/check_mcp_readiness.py
 ~~~
 
 Start UE MCP manually:
 ~~~powershell
-powershell -ExecutionPolicy Bypass -File Tools/MCP/start_ue_mcp_editor.ps1 -Port 8000
+python Tools/MCP/start_ue_mcp_editor.py --port 8000
 ~~~
 
 Export a staged Blender static mesh FBX:
 ~~~powershell
-powershell -ExecutionPolicy Bypass -File Tools/Assets/export_blender_static_mesh_fbx.ps1 -BlendPath Content/NewWorld/AIWork/MCP_DryRun/SM_MCP_DryRun_Blockout_A.blend -OutputFbx Content/NewWorld/AIWork/MCP_DryRun/SM_MCP_DryRun_Blockout_A.fbx
+python Tools/Assets/export_blender_static_mesh_fbx.py --blend-path Content/NewWorld/AIWork/MCP_DryRun/SM_MCP_DryRun_Blockout_A.blend --output-fbx Content/NewWorld/AIWork/MCP_DryRun/SM_MCP_DryRun_Blockout_A.fbx
 ~~~
 
 Import a staged StaticMesh through UE MCP:
 ~~~powershell
-powershell -ExecutionPolicy Bypass -File Tools/MCP/import_static_mesh_via_ue_mcp.ps1 -SourceFile Content/NewWorld/AIWork/MCP_DryRun/SM_MCP_DryRun_Blockout_A.fbx -FolderPath /Game/NewWorld/AIWork/MCP_DryRun -AssetName SM_MCP_DryRun_Blockout_A -AllowOverwrite
+python Tools/MCP/import_static_mesh_via_ue_mcp.py --source-file Content/NewWorld/AIWork/MCP_DryRun/SM_MCP_DryRun_Blockout_A.fbx --folder-path /Game/NewWorld/AIWork/MCP_DryRun --asset-name SM_MCP_DryRun_Blockout_A --allow-overwrite
 ~~~
 
 ## MCP Policy

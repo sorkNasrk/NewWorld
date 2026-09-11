@@ -24,8 +24,8 @@ Selected UE MCP toolsets are enabled for Editor targets only: ModelContextProtoc
 ## Project Commands
 
 ~~~powershell
-powershell -ExecutionPolicy Bypass -File Tools/MCP/check_mcp_readiness.ps1
-powershell -ExecutionPolicy Bypass -File Tools/MCP/start_ue_mcp_editor.ps1 -Port 8000
+python Tools/MCP/check_mcp_readiness.py
+python Tools/MCP/start_ue_mcp_editor.py --port 8000
 ~~~
 
-Use -RequireUnrealRunning on the readiness script only after the editor has finished loading.
+Use --require-unreal-running on the readiness script only after the editor has finished loading.

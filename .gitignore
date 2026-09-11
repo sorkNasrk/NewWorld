@@ -29,6 +29,10 @@ PackagedBuilds/
 *.log
 *.dmp
 
+# Python local cache
+__pycache__/
+*.py[cod]
+
 # OS noise
 Thumbs.db
 Desktop.ini

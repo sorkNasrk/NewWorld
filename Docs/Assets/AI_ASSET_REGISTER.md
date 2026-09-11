@@ -14,6 +14,11 @@ Copy this block when a task creates or materially edits a generated asset.
 - Role:
 - Asset type: concept / reference / static_mesh / skeletal_mesh / texture / material / animation / vfx / audio / music / voice / ui / font / cinematic / localization
 - Status: draft_prompt / approved_prompt / generated / dcc_cleanup / ue_imported / qa_passed / promoted / rejected
+- creation_route: ai_image_reference / ai_3d_then_blender / blender_mcp_direct / ue_mcp_assembly / procedural_tool_generated / manual_dcc_required / hybrid
+- route_decision_reason:
+- authoring_tools:
+- reference_pack_required: true / false
+- route_review_status: pending / approved / rejected / not_required
 - Source tool:
 - Model/provider:
 - Parameters:

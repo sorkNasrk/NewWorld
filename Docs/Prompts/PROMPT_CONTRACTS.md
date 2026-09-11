@@ -5,6 +5,11 @@ Use these contracts before calling AIART, AI Voice, model generation, texture ge
 ## Universal Fields
 
 - Asset/task id:
+- creation_route:
+- route_decision_reason:
+- authoring_tools:
+- reference_pack_required:
+- route_review_status:
 - Intended UE use:
 - Target path:
 - Audience/player context:
@@ -15,6 +20,8 @@ Use these contracts before calling AIART, AI Voice, model generation, texture ge
 - Rework threshold:
 - QA checklist:
 - Provenance/license note:
+
+Allowed creation routes: `ai_image_reference`, `ai_3d_then_blender`, `blender_mcp_direct`, `ue_mcp_assembly`, `procedural_tool_generated`, `manual_dcc_required`, and `hybrid`. Use Docs/Assets/ASSET_PRODUCTION_ROUTES.md before choosing.
 
 ## AIART Image Prompt
 
@@ -31,6 +38,8 @@ Require front, side, back, top orthographic views without perspective distortion
 Required detail: asset role, dimensions, view readability, primary forms, separable parts, material groups, topology expectations, UV/texture needs, forbidden defects, export format, candidate count, and cleanup path.
 
 Default quality policy: use the strongest available quality tier that fits the task. Use Hyper3D modelVariant "extremeHigh" when supported and suitable. Use Tripo textureQuality "detailed" when supported and suitable.
+
+Use `ai_3d_then_blender` when silhouette variety matters more than exact dimensions. Use `blender_mcp_direct` instead when snap, pivot, collision, modular dimensions, or repeatable topology is the real constraint.
 
 ## Blender MCP Prompt
 

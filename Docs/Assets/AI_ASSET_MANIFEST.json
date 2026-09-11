@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "project": "NewWorld",
   "status": "template",
   "staging_root": "Content/NewWorld/AIWork",
@@ -8,6 +8,7 @@
   "audio_brief": "Docs/Audio/AUDIO_BRIEF.md",
   "prompt_contracts": "Docs/Prompts/PROMPT_CONTRACTS.md",
   "approved_prompts": "Docs/Prompts/APPROVED_PROMPTS.md",
+  "asset_production_routes": "Docs/Assets/ASSET_PRODUCTION_ROUTES.md",
   "qa_checklists": "Docs/Assets/AI_ASSET_QA_CHECKLISTS.md",
   "human_register": "Docs/Assets/AI_ASSET_REGISTER.md",
   "assets": []

@@ -39,13 +39,13 @@
 - Project MCP config lives in .codex/config.toml. Do not use codex mcp add for this project unless the user explicitly asks to modify user-level Codex config.
 - Selected UE5.8 MCP plugins are enabled for Editor targets only: ModelContextProtocol, MCPClientToolset, EditorToolset, GameplayTagsToolset, UMGToolSet, NiagaraToolsets, PCGToolset, AIModuleToolset, AutomationTestToolset, and SlateInspectorToolset.
 - Start with read-only discovery and scene/asset queries.
-- Do not enable UE ModelContextProtocol auto-start by default; start it with Tools/MCP/start_ue_mcp_editor.ps1 when needed.
+- Do not enable UE ModelContextProtocol auto-start by default; start it with Tools/MCP/start_ue_mcp_editor.py when needed.
 - Do not overwrite .codex/config.toml from UE tools; generate a draft or merge manually.
 - Blender MCP writes should stay in a staging .blend or export folder until QA passes.
 - Keep Blender MCP safe mode enabled with BLENDER_MCP_SAFE_MODE=1.
-- Use Tools/Assets/export_blender_static_mesh_fbx.ps1 for deterministic Blender .blend -> FBX exports; it defaults to Content/NewWorld/AIWork and scales Blender meter units to UE centimeters.
+- Use Tools/Assets/export_blender_static_mesh_fbx.py for deterministic Blender .blend -> FBX exports; it defaults to Content/NewWorld/AIWork and scales Blender meter units to UE centimeters.
 - UE MCP StaticMeshTools.import_file is currently verified for .fbx/.obj through FbxFactory; convert .glb/.gltf to FBX/OBJ before this import path.
-- Use Tools/MCP/import_static_mesh_via_ue_mcp.ps1 for staging StaticMesh imports through UE MCP; it uses tools/list, describe_toolset, call_tool, full UObject refPath values, standard NewWorld metadata, save_assets, readback, and optional thumbnail evidence.
+- Use Tools/MCP/import_static_mesh_via_ue_mcp.py for staging StaticMesh imports through UE MCP; it uses tools/list, describe_toolset, call_tool, full UObject refPath values, standard NewWorld metadata, save_assets, readback, and optional thumbnail evidence.
 - Use Docs/Planning/MCP_OPERATION_AUDIT.md before any MCP write batch.
 - After any MCP write batch, report changed objects/assets, screenshot evidence, logs, validation status, rollback path, and remaining risk.
 
@@ -68,6 +68,7 @@
 - Image, audio, music, video, and 3D prompts must be drafted and approved before tool calls when the task asks for production assets.
 - For AIART and AI Voice generation calls, pass the approved prompt verbatim unless the user explicitly authorizes a rewrite.
 - AI assets enter Content/NewWorld/AIWork first.
+- Before producing an asset, record creation_route and route_decision_reason using Docs/Assets/ASSET_PRODUCTION_ROUTES.md.
 - Production assets require provenance, QA, UE import review, and Data Validation.
 - Use Docs/Prompts/PROMPT_CONTRACTS.md and Docs/Assets/AI_ASSET_QA_CHECKLISTS.md for generated asset tasks.
 
@@ -76,9 +77,9 @@
 - Compile after C++ header/reflection changes.
 - Run targeted Automation tests when available.
 - Run Data Validation before accepting asset-heavy changes.
-- Data Validation includes NewWorld asset policy checks for /Game/NewWorld naming, AIWork staging, manifest status, and MCP staging markers.
-- Run Tools/AI/check_ai_readiness.ps1 after changing AGENTS, .agents, .codex, project docs, or AI workflow scripts.
-- Run Tools/MCP/check_mcp_readiness.ps1 after changing MCP plugins, Config, .codex/config.toml, or Tools/MCP scripts.
+- Data Validation includes NewWorld asset policy checks for /Game/NewWorld naming, AIWork staging, manifest route/status, MCP staging markers, and first-pass StaticMesh/Texture/Material quality.
+- Run Tools/AI/check_ai_readiness.py after changing AGENTS, .agents, .codex, project docs, or AI workflow scripts.
+- Run Tools/MCP/check_mcp_readiness.py after changing MCP plugins, Config, .codex/config.toml, or Tools/MCP scripts.
 - Run Tools/AI/validate_ai_asset_manifest.py after changing Docs/Assets/AI_ASSET_MANIFEST.json.
 - For UI, verify keyboard/mouse/gamepad and multiple resolutions.
 - For performance claims, provide trace/stat/log evidence.

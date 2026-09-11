@@ -32,7 +32,7 @@ Data Validation includes the NewWorldEditor asset policy validator for /Game/New
 AI readiness check:
 
 ~~~powershell
-powershell -ExecutionPolicy Bypass -File Tools/AI/check_ai_readiness.ps1
+python Tools/AI/check_ai_readiness.py
 ~~~
 
 Manifest check:
